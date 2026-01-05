@@ -11,6 +11,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
+import { CsvImporter } from "@/components/admin/csv-importer"
+
 export default async function StaffManagement() {
     const staff = await prisma.staff.findMany({
         orderBy: { updatedAt: 'desc' }
@@ -18,7 +20,8 @@ export default async function StaffManagement() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <CsvImporter />
+            <div className="flex items-center justify-between pt-6 border-t">
                 <h1 className="text-2xl font-bold tracking-tight">Staff Directory</h1>
                 <Button asChild>
                     <Link href="/admin/staff/new">
@@ -46,7 +49,7 @@ export default async function StaffManagement() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            staff.map((s) => (
+                            staff.map((s: any) => (
                                 <TableRow key={s.id}>
                                     <TableCell className="font-medium">{s.name}</TableCell>
                                     <TableCell>{s.role || '-'}</TableCell>

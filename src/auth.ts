@@ -1,8 +1,8 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { z } from "zod"
-// import { PrismaAdapter } from "@auth/prisma-adapter" // Not strictly needed for Credentials only, but good for sessions if DB strategy used
-// import { prisma } from "@/lib/prisma" // We need to create this first
+import { prisma } from "@/lib/prisma"
+import bcrypt from "bcryptjs"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
@@ -18,20 +18,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                 if (parsedCredentials.success) {
                     const { email, password } = parsedCredentials.data
-                    // TODO: Verify user against database
-                    // const user = await prisma.user.findUnique({ where: { email } });
-                    // if (!user) return null;
-                    // const passwordsMatch = await bcrypt.compare(password, user.password);
-                    // if (passwordsMatch) return user;
 
-                    // MOCK USER FOR NOW
-                    if (email === "test@example.com" && password === "password") {
-                        return { id: "1", name: "Test User", email: email, role: "admin" }
-                    }
-                    return null
+                    const user = await prisma.user.findUnique({ where: { email } });
+                    if (!user) return null;
+
+                    const passwordsMatch = await bcrypt.compare(password, user.password);
+                    if (passwordsMatch) return user;
                 }
                 return null
             },
         }),
     ],
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                token.role = (user as any).role
+                token.id = user.id
+            }
+            return token
+        },
+        async session({ session, token }) {
+            if (session.user) {
+                (session.user as any).role = token.role as string
+                session.user.id = token.id as string
+            }
+            return session
+        }
+    }
 })

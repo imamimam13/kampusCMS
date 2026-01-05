@@ -10,17 +10,31 @@ import {
     Grid3X3,
     Calendar,
     Download,
+    GalleryHorizontal,
+    Images,
+    LayoutDashboard,
+    SquareDashedBottom,
     Newspaper,
-    Users
+    Users,
+    Contact,
+    Columns,
+    Info
 } from "lucide-react"
 
 const availableBlocks: { type: BlockType; label: string; icon: any }[] = [
     { type: "hero", label: "Hero Section", icon: LayoutTemplate },
     { type: "features", label: "Features List", icon: Grid3X3 },
+    { type: "about", label: "About Us", icon: Info }, // New
+    { type: "cards", label: "Card Grid", icon: LayoutDashboard },
+    { type: "columns", label: "Multi-Column Text", icon: Columns }, // New
+    { type: "contact", label: "Contact & Map", icon: Contact }, // New
     { type: "news-grid", label: "News Grid", icon: Newspaper },
     { type: "staff-grid", label: "Staff Linktree", icon: Users },
     { type: "text", label: "Text Block", icon: Type },
     { type: "image", label: "Image/Video", icon: ImageIcon },
+    { type: "gallery", label: "Photo Gallery", icon: GalleryHorizontal },
+    { type: "carousel", label: "Image Carousel", icon: Images },
+    { type: "separator", label: "Spacer / Separator", icon: SquareDashedBottom },
     { type: "calendar", label: "Events Calendar", icon: Calendar },
     { type: "download", label: "Download Center", icon: Download },
 ]

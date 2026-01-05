@@ -1,4 +1,4 @@
-export type BlockType = 'hero' | 'features' | 'news-grid' | 'staff-grid' | 'text' | 'image' | 'video' | 'calendar' | 'download' | 'gallery'
+export type BlockType = 'hero' | 'features' | 'news-grid' | 'staff-grid' | 'text' | 'image' | 'video' | 'calendar' | 'download' | 'gallery' | 'carousel' | 'separator' | 'cards' | 'contact' | 'columns' | 'about'
 
 export interface BlockData {
     id: string
@@ -55,5 +55,53 @@ export const defaultBlockContent: Record<BlockType, any> = {
         title: "Campus Gallery",
         subtitle: "Latest photos",
         count: 3
+    },
+    carousel: {
+        slides: [
+            { title: "Slide 1", image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f", subtitle: "Welcome" },
+            { title: "Slide 2", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1", subtitle: "Campus Life" }
+        ],
+        autoplay: true
+    },
+    separator: {
+        height: 20, // px
+        color: 'transparent',
+        showLine: false
+    },
+    cards: {
+        title: "Our Programs",
+        columns: 3, // 2, 3, or 4
+        items: [
+            { title: "Card 1", description: "Description here", image: "", link: "#" },
+            { title: "Card 2", description: "Description here", image: "", link: "#" },
+            { title: "Card 3", description: "Description here", image: "", link: "#" }
+        ]
+    },
+    contact: {
+        title: "Contact Us",
+        address: "<p>123 Campus Dr, City, State</p>",
+        phone: "+1 234 567 890",
+        email: "info@campus.edu",
+        mapUrl: "https://www.google.com/maps/embed?pb=..." // Placeholder
+    },
+    columns: {
+        count: 2, // 2 or 3
+        columns: [
+            { html: "<p>Column 1 content...</p>" },
+            { html: "<p>Column 2 content...</p>" },
+            { html: "<p>Column 3 content...</p>" }
+        ]
+    },
+    about: {
+        title: "About Our University",
+        description: "<p>We are a leading institution seeking to improve the world through education.</p>",
+        image: "https://images.unsplash.com/photo-1562774053-701939374585",
+        ctaText: "Read More",
+        ctaLink: "/about",
+        stats: [
+            { label: "Students", value: "5000+" },
+            { label: "Faculty", value: "300+" },
+            { label: "Years", value: "50" }
+        ]
     }
 }

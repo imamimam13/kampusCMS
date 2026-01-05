@@ -86,6 +86,66 @@ export function BuilderInspector() {
                                     onChange={(e) => handleUpdate('secondaryCtaLink', e.target.value)}
                                 />
                             </div>
+                            <div className="space-y-2">
+                                <Label>Background Color</Label>
+                                <div className="flex items-center gap-2">
+                                    <div
+                                        className="w-10 h-10 rounded border shadow-sm"
+                                        style={{ backgroundColor: selectedBlock.content.backgroundColor || '#111827' }}
+                                    />
+                                    <Input
+                                        type="color"
+                                        className="w-full h-10 p-1 cursor-pointer"
+                                        value={selectedBlock.content.backgroundColor || '#111827'}
+                                        onChange={(e) => handleUpdate('backgroundColor', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Background Image</Label>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => document.getElementById('hero-bg-upload')?.click()}
+                                        className="w-full"
+                                    >
+                                        <UploadCloud className="mr-2 h-4 w-4" />
+                                        Upload BG
+                                    </Button>
+                                    <input
+                                        id="hero-bg-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0]
+                                            if (!file) return
+                                            const formData = new FormData()
+                                            formData.append('file', file)
+                                            try {
+                                                const res = await fetch('/api/upload', { method: 'POST', body: formData })
+                                                if (res.ok) {
+                                                    const data = await res.json()
+                                                    handleUpdate('backgroundImage', data.url)
+                                                }
+                                            } catch (err) { console.error("Upload failed") }
+                                        }}
+                                    />
+                                </div>
+                                {selectedBlock.content.backgroundImage && (
+                                    <div className="relative mt-2 aspect-video w-full rounded border overflow-hidden group">
+                                        <img src={selectedBlock.content.backgroundImage} className="w-full h-full object-cover" />
+                                        <Button
+                                            variant="destructive" size="icon"
+                                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            onClick={() => handleUpdate('backgroundImage', '')}
+                                        >
+                                            <X className="h-3 w-3" />
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </>
                 )}
@@ -340,8 +400,465 @@ export function BuilderInspector() {
                     </div>
                 )}
 
+                {selectedBlock.type === 'carousel' && (
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <Label>Autoplay</Label>
+                            <input
+                                type="checkbox"
+                                className="toggle"
+                                checked={selectedBlock.content.autoplay}
+                                onChange={(e) => handleUpdate('autoplay', e.target.checked)}
+                            />
+                        </div>
+
+                        <div className="space-y-4 border-t pt-4">
+                            <Label>Slides</Label>
+                            {(selectedBlock.content.slides || []).map((slide: any, index: number) => (
+                                <div key={index} className="space-y-3 p-3 bg-slate-50 rounded border relative group">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs font-bold text-muted-foreground">Slide {index + 1}</span>
+                                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-red-500" onClick={() => {
+                                            const newSlides = [...(selectedBlock.content.slides || [])]
+                                            newSlides.splice(index, 1)
+                                            handleUpdate('slides', newSlides)
+                                        }}>
+                                            <X className="h-3 w-3" />
+                                        </Button>
+                                    </div>
+
+                                    {/* Image Upload/Preview */}
+                                    <div className="relative aspect-video bg-slate-200 rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                                        onClick={() => document.getElementById(`slide-upload-${index}`)?.click()}
+                                    >
+                                        {slide.image ? (
+                                            <img src={slide.image} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="flex items-center justify-center h-full text-xs text-muted-foreground">Click to Upload Image</div>
+                                        )}
+                                        <input
+                                            id={`slide-upload-${index}`}
+                                            type="file"
+                                            className="hidden"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0]
+                                                if (!file) return
+                                                const formData = new FormData()
+                                                formData.append('file', file)
+                                                // Simplified upload logic for brevity
+                                                try {
+                                                    const res = await fetch('/api/upload', { method: 'POST', body: formData })
+                                                    if (res.ok) {
+                                                        const data = await res.json()
+                                                        const newSlides = [...(selectedBlock.content.slides || [])]
+                                                        newSlides[index] = { ...newSlides[index], image: data.url }
+                                                        handleUpdate('slides', newSlides)
+                                                    }
+                                                } catch (e) {
+                                                    console.error(e)
+                                                }
+                                            }}
+                                        />
+                                    </div>
+
+                                    <Input
+                                        placeholder="Title"
+                                        className="h-8 text-sm"
+                                        value={slide.title || ''}
+                                        onChange={(e) => {
+                                            const newSlides = [...(selectedBlock.content.slides || [])]
+                                            newSlides[index] = { ...newSlides[index], title: e.target.value }
+                                            handleUpdate('slides', newSlides)
+                                        }}
+                                    />
+                                    <Input
+                                        placeholder="Subtitle"
+                                        className="h-8 text-sm"
+                                        value={slide.subtitle || ''}
+                                        onChange={(e) => {
+                                            const newSlides = [...(selectedBlock.content.slides || [])]
+                                            newSlides[index] = { ...newSlides[index], subtitle: e.target.value }
+                                            handleUpdate('slides', newSlides)
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full"
+                                onClick={() => {
+                                    const newSlides = [...(selectedBlock.content.slides || []), { title: "New Slide", subtitle: "", image: "" }]
+                                    handleUpdate('slides', newSlides)
+                                }}
+                            >
+                                + Add Slide
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+                {selectedBlock.type === 'separator' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Height (px)</Label>
+                            <Input
+                                type="number"
+                                value={selectedBlock.content.height || 20}
+                                onChange={(e) => handleUpdate('height', parseInt(e.target.value))}
+                            />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <Label>Show Line</Label>
+                            <input
+                                type="checkbox"
+                                className="toggle"
+                                checked={selectedBlock.content.showLine}
+                                onChange={(e) => handleUpdate('showLine', e.target.checked)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Background Color</Label>
+                            <div className="flex items-center gap-2">
+                                <div
+                                    className="w-10 h-10 rounded border shadow-sm"
+                                    style={{ backgroundColor: selectedBlock.content.color || 'transparent' }}
+                                />
+                                <Input
+                                    type="color"
+                                    className="w-full h-10 p-1 cursor-pointer"
+                                    value={selectedBlock.content.color || '#ffffff'}
+                                    onChange={(e) => handleUpdate('color', e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {selectedBlock.type === 'cards' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Section Title</Label>
+                            <Input
+                                value={selectedBlock.content.title || ''}
+                                onChange={(e) => handleUpdate('title', e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Columns</Label>
+                            <select
+                                className="w-full border rounded-md p-2 text-sm"
+                                value={selectedBlock.content.columns || 3}
+                                onChange={(e) => handleUpdate('columns', parseInt(e.target.value))}
+                            >
+                                <option value={2}>2 Columns</option>
+                                <option value={3}>3 Columns</option>
+                                <option value={4}>4 Columns</option>
+                            </select>
+                        </div>
+
+                        <div className="space-y-4 border-t pt-4">
+                            <Label>Cards</Label>
+                            {(selectedBlock.content.items || []).map((item: any, index: number) => (
+                                <div key={index} className="space-y-3 p-3 bg-slate-50 rounded border relative group">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-xs font-bold text-muted-foreground">Card {index + 1}</span>
+                                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-red-500" onClick={() => {
+                                            const newItems = [...(selectedBlock.content.items || [])]
+                                            newItems.splice(index, 1)
+                                            handleUpdate('items', newItems)
+                                        }}>
+                                            <X className="h-3 w-3" />
+                                        </Button>
+                                    </div>
+
+                                    {/* Image Upload for Card */}
+                                    {/* Image Upload/Preview */}
+                                    <div className="relative aspect-video bg-slate-200 rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                                        onClick={() => document.getElementById(`card-upload-${index}`)?.click()}
+                                    >
+                                        {item.image ? (
+                                            <img src={item.image} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="flex items-center justify-center h-full text-xs text-muted-foreground">Click to Upload Image</div>
+                                        )}
+                                        <input
+                                            id={`card-upload-${index}`}
+                                            type="file"
+                                            className="hidden"
+                                            onChange={async (e) => {
+                                                const file = e.target.files?.[0]
+                                                if (!file) return
+                                                const formData = new FormData()
+                                                formData.append('file', file)
+                                                // Simplified upload logic
+                                                try {
+                                                    const res = await fetch('/api/upload', { method: 'POST', body: formData })
+                                                    if (res.ok) {
+                                                        const data = await res.json()
+                                                        const newItems = [...(selectedBlock.content.items || [])]
+                                                        newItems[index] = { ...newItems[index], image: data.url }
+                                                        handleUpdate('items', newItems)
+                                                    }
+                                                } catch (e) {
+                                                    console.error(e)
+                                                }
+                                            }}
+                                        />
+                                    </div>
+
+                                    <Input
+                                        placeholder="Title"
+                                        className="h-8 text-sm"
+                                        value={item.title || ''}
+                                        onChange={(e) => {
+                                            const newItems = [...(selectedBlock.content.items || [])]
+                                            newItems[index] = { ...newItems[index], title: e.target.value }
+                                            handleUpdate('items', newItems)
+                                        }}
+                                    />
+                                    <Textarea
+                                        placeholder="Description"
+                                        className="min-h-[60px] text-sm"
+                                        value={item.description || ''}
+                                        onChange={(e) => {
+                                            const newItems = [...(selectedBlock.content.items || [])]
+                                            newItems[index] = { ...newItems[index], description: e.target.value }
+                                            handleUpdate('items', newItems)
+                                        }}
+                                    />
+                                    <Input
+                                        placeholder="Link URL"
+                                        className="h-8 text-sm"
+                                        value={item.link || ''}
+                                        onChange={(e) => {
+                                            const newItems = [...(selectedBlock.content.items || [])]
+                                            newItems[index] = { ...newItems[index], link: e.target.value }
+                                            handleUpdate('items', newItems)
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full"
+                                onClick={() => {
+                                    const newItems = [...(selectedBlock.content.items || []), { title: "New Card", description: "Description", image: "", link: "#" }]
+                                    handleUpdate('items', newItems)
+                                }}
+                            >
+                                + Add Card
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+                {selectedBlock.type === 'contact' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Section Title</Label>
+                            <Input
+                                value={selectedBlock.content.title || ''}
+                                onChange={(e) => handleUpdate('title', e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Address / Info (Rich Text)</Label>
+                            <RichTextEditor
+                                value={selectedBlock.content.address || ''}
+                                onChange={(value) => handleUpdate('address', value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Phone</Label>
+                            <Input
+                                value={selectedBlock.content.phone || ''}
+                                onChange={(e) => handleUpdate('phone', e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Email</Label>
+                            <Input
+                                value={selectedBlock.content.email || ''}
+                                onChange={(e) => handleUpdate('email', e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Google Maps Embed URL</Label>
+                            <Textarea
+                                placeholder="https://www.google.com/maps/embed?..."
+                                className="text-xs font-mono"
+                                value={selectedBlock.content.mapUrl || ''}
+                                onChange={(e) => handleUpdate('mapUrl', e.target.value)}
+                            />
+                            <p className="text-[10px] text-muted-foreground">Go to Google Maps &gt; Share &gt; Embed a map &gt; Copy the 'src' URL inside the &lt;iframe&gt;</p>
+                        </div>
+                    </div>
+                )}
+
+                {selectedBlock.type === 'columns' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Layout</Label>
+                            <select
+                                className="w-full border rounded-md p-2 text-sm"
+                                value={selectedBlock.content.count || 2}
+                                onChange={(e) => handleUpdate('count', parseInt(e.target.value))}
+                            >
+                                <option value={2}>2 Columns (50/50)</option>
+                                <option value={3}>3 Columns (33/33/33)</option>
+                            </select>
+                        </div>
+
+                        <div className="space-y-6 pt-4 border-t">
+                            {Array.from({ length: selectedBlock.content.count || 2 }).map((_, i) => (
+                                <div key={i} className="space-y-2">
+                                    <Label className="font-semibold text-purple-600">Column {i + 1} Content</Label>
+                                    <RichTextEditor
+                                        value={selectedBlock.content.columns?.[i]?.html || ''}
+                                        onChange={(value) => {
+                                            const newCols = [...(selectedBlock.content.columns || [])]
+                                            // Ensure array has objects up to i
+                                            for (let k = 0; k <= i; k++) { if (!newCols[k]) newCols[k] = { html: '' } }
+                                            newCols[i] = { ...newCols[i], html: value }
+                                            handleUpdate('columns', newCols)
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {selectedBlock.type === 'about' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Section Title</Label>
+                            <Input
+                                value={selectedBlock.content.title || ''}
+                                onChange={(e) => handleUpdate('title', e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Description</Label>
+                            <RichTextEditor
+                                value={selectedBlock.content.description || ''}
+                                onChange={(value) => handleUpdate('description', value)}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Main Image</Label>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => document.getElementById('about-bg-upload')?.click()}
+                                    className="w-full"
+                                >
+                                    <UploadCloud className="mr-2 h-4 w-4" />
+                                    Upload Image
+                                </Button>
+                                <input
+                                    id="about-bg-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0]
+                                        if (!file) return
+                                        const formData = new FormData()
+                                        formData.append('file', file)
+                                        try {
+                                            const res = await fetch('/api/upload', { method: 'POST', body: formData })
+                                            if (res.ok) {
+                                                const data = await res.json()
+                                                handleUpdate('image', data.url)
+                                            }
+                                        } catch (err) { console.error("Upload failed") }
+                                    }}
+                                />
+                            </div>
+                            {selectedBlock.content.image && (
+                                <div className="relative mt-2 aspect-video w-full rounded border overflow-hidden group">
+                                    <img src={selectedBlock.content.image} className="w-full h-full object-cover" />
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>CTA Text</Label>
+                                <Input
+                                    value={selectedBlock.content.ctaText || ''}
+                                    onChange={(e) => handleUpdate('ctaText', e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>CTA Link</Label>
+                                <Input
+                                    value={selectedBlock.content.ctaLink || ''}
+                                    onChange={(e) => handleUpdate('ctaLink', e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 border-t pt-4">
+                            <Label>Stats / Counters</Label>
+                            {(selectedBlock.content.stats || []).map((stat: any, index: number) => (
+                                <div key={index} className="grid grid-cols-2 gap-4 p-3 bg-slate-50 rounded border relative">
+                                    <Button variant="ghost" size="sm" className="absolute -top-3 -right-3 h-6 w-6 p-0 text-red-500 rounded-full bg-white shadow border" onClick={() => {
+                                        const newStats = [...(selectedBlock.content.stats || [])]
+                                        newStats.splice(index, 1)
+                                        handleUpdate('stats', newStats)
+                                    }}>
+                                        <X className="h-3 w-3" />
+                                    </Button>
+                                    <div>
+                                        <Label className="text-xs">Value (e.g. 500+)</Label>
+                                        <Input
+                                            className="h-8 text-sm"
+                                            value={stat.value || ''}
+                                            onChange={(e) => {
+                                                const newStats = [...(selectedBlock.content.stats || [])]
+                                                newStats[index] = { ...newStats[index], value: e.target.value }
+                                                handleUpdate('stats', newStats)
+                                            }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label className="text-xs">Label (e.g. Students)</Label>
+                                        <Input
+                                            className="h-8 text-sm"
+                                            value={stat.label || ''}
+                                            onChange={(e) => {
+                                                const newStats = [...(selectedBlock.content.stats || [])]
+                                                newStats[index] = { ...newStats[index], label: e.target.value }
+                                                handleUpdate('stats', newStats)
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full"
+                                onClick={() => {
+                                    const newStats = [...(selectedBlock.content.stats || []), { value: "100", label: "Metric" }]
+                                    handleUpdate('stats', newStats)
+                                }}
+                            >
+                                + Add Stat
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+
                 {/* Generic fallback for remaining unknown types */}
-                {!['hero', 'text', 'features', 'news-grid', 'staff-grid', 'calendar', 'download', 'image', 'gallery'].includes(selectedBlock.type) && (
+                {!['hero', 'text', 'features', 'news-grid', 'staff-grid', 'calendar', 'download', 'image', 'gallery', 'carousel', 'separator', 'cards', 'contact', 'columns', 'about'].includes(selectedBlock.type) && (
                     <div className="space-y-2">
                         <p className="text-sm text-yellow-600 bg-yellow-50 p-2 rounded">
                             Field editor for <strong>{selectedBlock.type}</strong> is under construction.

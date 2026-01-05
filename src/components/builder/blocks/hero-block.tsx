@@ -2,12 +2,22 @@ import { BlockData } from "@/types/builder"
 import { Button } from "@/components/ui/button"
 
 export function HeroBlock({ data }: { data: BlockData }) {
-    const { title, subtitle, ctaText, ctaLink, secondaryCtaText, secondaryCtaLink } = data.content
+    const { title, subtitle, ctaText, ctaLink, secondaryCtaText, secondaryCtaLink, backgroundColor, backgroundImage } = data.content
 
     return (
-        <div className="relative bg-gray-900 text-white py-20 px-6 text-center rounded-md overflow-hidden">
-            {/* Background Image Placeholder */}
-            <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
+        <div
+            className="relative py-24 px-6 text-center rounded-md overflow-hidden text-white"
+            style={{
+                backgroundColor: backgroundColor || '#111827',
+                backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+            }}
+        >
+            {/* Overlay if image is present to ensure text readability */}
+            {backgroundImage && (
+                <div className="absolute inset-0 bg-black/50"></div>
+            )}
 
             <div className="relative z-10 max-w-2xl mx-auto space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">

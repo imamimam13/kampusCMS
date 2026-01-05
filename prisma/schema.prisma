@@ -13,9 +13,11 @@ model User {
   email     String   @unique
   password  String
   name      String?
-  role      String   @default("editor") // admin, editor
+  role      String   @default("editor") // admin, editor, dosen
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  staff     Staff?
 }
 
 model Setting {
@@ -65,6 +67,8 @@ model Staff {
   updatedAt DateTime @updatedAt
 
   // Relations
+  userId    String?  @unique // Link to User account
+  user      User?    @relation(fields: [userId], references: [id])
   posts     Post[]
 }
 

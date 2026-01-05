@@ -7,6 +7,12 @@ import { CalendarBlock } from "./blocks/calendar-block"
 import { DownloadBlock } from "./blocks/download-block"
 import { GalleryBlock } from "./blocks/gallery-block"
 import { ImageBlock } from "./blocks/image-block"
+import { CarouselBlock } from "./blocks/carousel-block"
+import { SeparatorBlock } from "./blocks/separator-block"
+import { CardGridBlock } from "./blocks/card-grid-block"
+import { ContactBlock } from "./blocks/contact-block"
+import { ColumnsBlock } from "./blocks/columns-block"
+import { AboutBlock } from "./blocks/about-block"
 
 export function BlockRenderer({ block }: { block: BlockData }) {
     switch (block.type) {
@@ -24,6 +30,18 @@ export function BlockRenderer({ block }: { block: BlockData }) {
             return <DownloadBlock data={block} />
         case "gallery":
             return <GalleryBlock data={block} />
+        case "carousel":
+            return <CarouselBlock data={block} />
+        case "separator":
+            return <SeparatorBlock data={block} />
+        case "cards":
+            return <CardGridBlock data={block} />
+        case "contact":
+            return <ContactBlock data={block} />
+        case "columns":
+            return <ColumnsBlock data={block} />
+        case "about":
+            return <AboutBlock data={block} />
         case "image":
             return <ImageBlock data={block} />
         case "text":
