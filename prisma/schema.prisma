@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Core System
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("editor") // admin, editor
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Setting {
+  key       String   @id
+  value     Json     // Flexible settings (colors, logo, social links)
+  updatedAt DateTime @updatedAt
+}
+
+// Content Management
+model Page {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   Json?    // Block-based content from the Page Builder
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String?  @db.Text
+  image     String?
+  published Boolean  @default(false)
+
+  authorId  String?
+  author    Staff?   @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Campus Modules
+model Staff {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique // For personal page: /dosen/nama-dosen
+  nidn      String?  // NIDN/NIP
+  role      String?  // Lecturer, Dean, etc.
+  bio       String?
+  image     String?
+  links     Json?    // Linktree style: [{ label: "Scholar", url: "..." }]
+  pddiktiData Json?  // Raw data from API
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  posts     Post[]
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  location    String?
+  image       String?
+  category    String?  // Academic, Holiday, etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Download {
+  id        String   @id @default(cuid())
+  title     String
+  fileUrl   String
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryAlbum {
+  id        String   @id @default(cuid())
+  title     String
+  description String?
+  coverImage String?
+  images    GalleryImage[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  caption   String?
+  size      Int?     // Size in bytes
+  width     Int?
+  height    Int?
+  albumId   String
+  album     GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String   // e.g. "Alumni 2021"
+  content   String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSettings {
+  id          String   @id @default(cuid())
+  name        String   @default("KampusCMS")
+  description String?
+  logo        String?  // URL to logo
+  
+  // Theme
+  colors      Json?    // { primary: "#...", secondary: "#..." }
+  fonts       Json?    // { heading: "Inter", body: "Inter" }
+  
+  // Layout
+  headerLinks Json?    // Array of navigation links
+  footerText  String?
+  
+  // Scripts & SEO
+  headCode    String?  // Google Verification, etc.
+  bodyCode    String?  // Analytics, etc.
+
+  // AI Configuration
+  aiConfig    Json?    // { provider: 'gemini' | 'openai', geminiKey: '...', openaiKey: '...' }
+  
+  updatedAt   DateTime @updatedAt
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  content   String   // The text to display
+  link      String?  // Optional link
+  isActive  Boolean  @default(true)
+  startDate DateTime @default(now())
+  endDate   DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

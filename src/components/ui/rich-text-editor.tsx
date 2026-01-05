@@ -1,0 +1,119 @@
+"use client"
+
+import { useEffect } from "react"
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { Button } from '@/components/ui/button'
+import { Bold, Italic, List, ListOrdered, Quote, Redo, Strikethrough, Undo } from 'lucide-react'
+
+interface RichTextEditorProps {
+    value: string
+    onChange: (value: string) => void
+}
+
+export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
+    const editor = useEditor({
+        extensions: [StarterKit],
+        content: value,
+        immediatelyRender: false,
+        editorProps: {
+            attributes: {
+                class: 'min-h-[150px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 overflow-auto',
+            },
+        },
+        onUpdate: ({ editor }) => {
+            onChange(editor.getHTML())
+        },
+    })
+
+    // Sync content when value prop changes externally (e.g. from AI)
+
+    useEffect(() => {
+        if (editor && value && value !== editor.getHTML()) {
+            editor.commands.setContent(value)
+        }
+    }, [value, editor])
+
+    if (!editor) {
+        return null
+    }
+
+    return (
+        <div className="space-y-2">
+            <div className="flex flex-wrap gap-1 p-1 border rounded-md bg-muted/50">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().toggleBold().run()}
+                    className={editor.isActive('bold') ? 'bg-muted' : ''}
+                    title="Bold"
+                >
+                    <Bold className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().toggleItalic().run()}
+                    className={editor.isActive('italic') ? 'bg-muted' : ''}
+                    title="Italic"
+                >
+                    <Italic className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().toggleStrike().run()}
+                    className={editor.isActive('strike') ? 'bg-muted' : ''}
+                    title="Strike"
+                >
+                    <Strikethrough className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().toggleBulletList().run()}
+                    className={editor.isActive('bulletList') ? 'bg-muted' : ''}
+                    title="Bullet List"
+                >
+                    <List className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                    className={editor.isActive('orderedList') ? 'bg-muted' : ''}
+                    title="Ordered List"
+                >
+                    <ListOrdered className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                    className={editor.isActive('blockquote') ? 'bg-muted' : ''}
+                    title="Quote"
+                >
+                    <Quote className="h-4 w-4" />
+                </Button>
+                <div className="border-l mx-1" />
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().undo().run()}
+                    title="Undo"
+                >
+                    <Undo className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().redo().run()}
+                    title="Redo"
+                >
+                    <Redo className="h-4 w-4" />
+                </Button>
+            </div>
+            <EditorContent editor={editor} />
+        </div>
+    )
+}
