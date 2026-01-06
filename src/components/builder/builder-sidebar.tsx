@@ -19,7 +19,9 @@ import {
     Contact,
     Columns,
     Info,
-    GraduationCap
+    GraduationCap,
+    Rss,
+    Share2
 } from "lucide-react"
 
 const availableBlocks: { type: BlockType; label: string; icon: any }[] = [
@@ -29,6 +31,8 @@ const availableBlocks: { type: BlockType; label: string; icon: any }[] = [
     { type: "cards", label: "Card Grid", icon: LayoutDashboard },
     { type: "columns", label: "Multi-Column Text", icon: Columns }, // New
     { type: "contact", label: "Contact & Map", icon: Contact }, // New
+    { type: "social", label: "Social Media Embed", icon: Share2 },
+    { type: "rss", label: "RSS News Feed", icon: Rss },
     { type: "news-grid", label: "News Grid", icon: Newspaper },
     { type: "staff-grid", label: "Staff Linktree", icon: Users },
     { type: "text", label: "Text Block", icon: Type },

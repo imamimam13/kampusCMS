@@ -728,6 +728,131 @@ export function BuilderInspector() {
                     </div>
                 )}
 
+                {selectedBlock.type === 'rss' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Section Title</Label>
+                            <Input
+                                value={selectedBlock.content.title || ''}
+                                onChange={(e) => handleUpdate('title', e.target.value)}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>RSS Feed URL</Label>
+                            <Input
+                                placeholder="https://example.com/feed.xml"
+                                value={selectedBlock.content.url || ''}
+                                onChange={(e) => handleUpdate('url', e.target.value)}
+                            />
+                            <p className="text-[10px] text-muted-foreground">Direct link to an XML RSS feed</p>
+                        </div>
+
+                        <div className="relative flex py-1 items-center">
+                            <div className="flex-grow border-t border-gray-200"></div>
+                            <span className="flex-shrink-0 mx-2 text-gray-400 text-xs">OR USE KEYWORD</span>
+                            <div className="flex-grow border-t border-gray-200"></div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Google News Keyword</Label>
+                            <Input
+                                placeholder="e.g. Kampus Merdeka"
+                                value={selectedBlock.content.keyword || ''}
+                                onChange={(e) => handleUpdate('keyword', e.target.value)}
+                            />
+                            <p className="text-[10px] text-muted-foreground">Fetches news from Google News</p>
+                        </div>
+
+                        <div className="space-y-2 pt-2 border-t">
+                            <Label>Display Layout</Label>
+                            <select
+                                className="w-full border rounded-md p-2 text-sm"
+                                value={selectedBlock.content.layout || 'grid'}
+                                onChange={(e) => handleUpdate('layout', e.target.value)}
+                            >
+                                <option value="grid">Grid Card (with Images)</option>
+                                <option value="list">Simple List</option>
+                            </select>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Item Count</Label>
+                            <Input
+                                type="number"
+                                value={selectedBlock.content.count || 6}
+                                onChange={(e) => handleUpdate('count', parseInt(e.target.value))}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {selectedBlock.type === 'social' && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Section Title</Label>
+                            <Input
+                                value={selectedBlock.content.title || ''}
+                                onChange={(e) => handleUpdate('title', e.target.value)}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Mode</Label>
+                            <select
+                                className="w-full border rounded-md p-2 text-sm"
+                                value={selectedBlock.content.mode || 'url'}
+                                onChange={(e) => handleUpdate('mode', e.target.value)}
+                            >
+                                <option value="url">Single Post URL (Native)</option>
+                                <option value="code">Embed Code (Widget)</option>
+                            </select>
+                        </div>
+
+                        {selectedBlock.content.mode === 'url' ? (
+                            <>
+                                <div className="space-y-2">
+                                    <Label>Platform</Label>
+                                    <select
+                                        className="w-full border rounded-md p-2 text-sm"
+                                        value={selectedBlock.content.platform || 'instagram'}
+                                        onChange={(e) => handleUpdate('platform', e.target.value)}
+                                    >
+                                        <option value="instagram">Instagram</option>
+                                        <option value="tiktok">TikTok</option>
+                                        <option value="youtube">YouTube</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Post/Video URL</Label>
+                                    <Input
+                                        placeholder="https://..."
+                                        value={selectedBlock.content.url || ''}
+                                        onChange={(e) => handleUpdate('url', e.target.value)}
+                                    />
+                                    <p className="text-[10px] text-muted-foreground">
+                                        Paste the full link to the single post or video.
+                                    </p>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="space-y-2">
+                                <Label>Embed Code</Label>
+                                <Textarea
+                                    rows={6}
+                                    placeholder="<blockquote...>...</blockquote>"
+                                    className="font-mono text-xs"
+                                    value={selectedBlock.content.code || ''}
+                                    onChange={(e) => handleUpdate('code', e.target.value)}
+                                />
+                                <p className="text-[10px] text-muted-foreground">
+                                    Paste raw HTML code from Elfsight, SnapWidget, or native embed button.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 {selectedBlock.type === 'tracer-stats' && (
                     <div className="space-y-2">
                         <Label>Section Title</Label>
@@ -800,20 +925,21 @@ export function BuilderInspector() {
                                 <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => document.getElementById('about-bg-upload')?.click()}
+                                    onClick={() => document.getElementById('block-image-upload')?.click()}
                                     className="w-full"
                                 >
                                     <UploadCloud className="mr-2 h-4 w-4" />
                                     Upload Image
                                 </Button>
                                 <input
-                                    id="about-bg-upload"
+                                    id="block-image-upload"
                                     type="file"
                                     accept="image/*"
                                     className="hidden"
                                     onChange={async (e) => {
                                         const file = e.target.files?.[0]
                                         if (!file) return
+
                                         const formData = new FormData()
                                         formData.append('file', file)
                                         try {
@@ -827,7 +953,7 @@ export function BuilderInspector() {
                                 />
                             </div>
                             {selectedBlock.content.image && (
-                                <div className="relative mt-2 aspect-video w-full rounded border overflow-hidden group">
+                                <div className="mt-2 aspect-video w-full rounded border overflow-hidden">
                                     <img src={selectedBlock.content.image} className="w-full h-full object-cover" />
                                 </div>
                             )}

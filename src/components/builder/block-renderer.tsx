@@ -16,6 +16,8 @@ import { AboutBlock } from "./blocks/about-block"
 import { ProdiGridBlock } from "./blocks/prodi-grid-block"
 
 import { TracerStatsBlock } from "./blocks/tracer-stats-block"
+import { RSSBlock } from "./blocks/rss-block"
+import { SocialBlock } from "./blocks/social-block"
 
 export function BlockRenderer({ block }: { block: BlockData }) {
     switch (block.type) {
@@ -49,6 +51,10 @@ export function BlockRenderer({ block }: { block: BlockData }) {
             return <ProdiGridBlock content={block.content} />
         case "tracer-stats":
             return <TracerStatsBlock content={block.content} />
+        case "rss":
+            return <RSSBlock data={block} />
+        case "social":
+            return <SocialBlock data={block} />
         case "image":
             return <ImageBlock data={block} />
         case "text":

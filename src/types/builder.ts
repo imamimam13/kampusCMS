@@ -1,4 +1,4 @@
-export type BlockType = 'hero' | 'features' | 'news-grid' | 'staff-grid' | 'text' | 'image' | 'video' | 'calendar' | 'download' | 'gallery' | 'carousel' | 'separator' | 'cards' | 'contact' | 'columns' | 'about' | 'prodi-grid' | 'tracer-stats'
+export type BlockType = 'hero' | 'features' | 'news-grid' | 'staff-grid' | 'text' | 'image' | 'video' | 'calendar' | 'download' | 'gallery' | 'carousel' | 'separator' | 'cards' | 'contact' | 'columns' | 'about' | 'prodi-grid' | 'tracer-stats' | 'rss' | 'social'
 
 export interface BlockData {
     id: string
@@ -112,5 +112,17 @@ export const defaultBlockContent: Record<BlockType, any> = {
     'tracer-stats': {
         title: "Alumni Success",
         description: "See how our graduates are performing in the professional world."
+    },
+    rss: {
+        title: "Latest Updates",
+        count: 6,
+        layout: "grid",
+        keyword: "Pendidikan Tinggi Indonesia" // Default keyword for instant gratification
+    },
+    social: {
+        title: "Follow Us",
+        mode: "url",
+        platform: "instagram",
+        url: "https://www.instagram.com/p/C-uX___v_7z/" // Placeholder post
     }
 }
