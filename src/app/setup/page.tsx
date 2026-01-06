@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import { SetupForm } from "@/components/setup/setup-form"
 
+export const dynamic = 'force-dynamic'
+
 export default async function SetupPage() {
     // Security Check: Only allow setup if NO users exist
     const userCount = await prisma.user.count()
