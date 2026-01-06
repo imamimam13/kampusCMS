@@ -53,11 +53,15 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 
+# Install runtime dependencies
+RUN apk add --no-cache su-exec postgresql-client
+
 # Copy entrypoint script
 COPY --chown=nextjs:nodejs docker-entrypoint.sh ./
 RUN chmod +x docker-entrypoint.sh
 
-USER nextjs
+# USER nextjs - Commented out to run as root first (for permission fix in entrypoint)
+# USER nextjs
 
 EXPOSE 3000
 

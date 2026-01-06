@@ -2,9 +2,16 @@
 set -e
 
 # Run migrations
-echo "Runnning database migrations..."
-npx prisma@6 db push
+# Fix permissions for uploads directory (mounted volume)
+echo "Fixing permissions for /app/public/uploads..."
+mkdir -p /app/public/uploads
+chown -R nextjs:nodejs /app/public/uploads
+chown -R nextjs:nodejs /app/.next
 
-# Start the application
+# Run migrations (as nextjs user)
+echo "Runnning database migrations..."
+su-exec nextjs npx prisma@6 db push
+
+# Start the application (as nextjs user)
 echo "Starting application..."
-exec "$@"
+exec su-exec nextjs "$@"
