@@ -52,7 +52,13 @@ export function BlockRenderer({ block }: { block: BlockData }) {
         case "image":
             return <ImageBlock data={block} />
         case "text":
-            return <div className="p-4 bg-white prose max-w-none" dangerouslySetInnerHTML={{ __html: block.content.html }} />
+            return (
+                <section className="bg-white">
+                    <div className="container mx-auto px-4 py-8">
+                        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: block.content.html }} />
+                    </div>
+                </section>
+            )
         default:
             // Fallback for unimplemented blocks
             return (
