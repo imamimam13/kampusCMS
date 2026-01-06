@@ -22,6 +22,7 @@ COPY . .
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 # Run prisma generate to ingest schema
+ENV DATABASE_URL="postgresql://val@localhost:5432/db"
 RUN npx prisma generate
 
 RUN npm run build
