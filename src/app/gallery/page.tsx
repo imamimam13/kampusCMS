@@ -35,7 +35,7 @@ export default async function GalleryPage() {
                             <p className="text-gray-500 mt-2">Check back soon for photos!</p>
                         </div>
                     ) : (
-                        albums.map((album) => (
+                        albums.map((album: any) => (
                             <Link
                                 key={album.id}
                                 href={`/gallery/${album.id}`}
