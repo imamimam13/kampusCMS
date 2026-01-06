@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/table"
 import { PageListActions } from "@/components/pages/page-list-actions"
 
+export const dynamic = 'force-dynamic'
+
 export default async function PagesManagement() {
     const pages = await prisma.page.findMany({
         orderBy: { updatedAt: 'desc' }
