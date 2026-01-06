@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma"
 import { Button } from "@/components/ui/button"
 import { FileText, Download as DownloadIcon, Search } from "lucide-react"
 
-export const revalidate = 3600
+// Force dynamic rendering to skip build-time DB check
+export const dynamic = 'force-dynamic'
 
 export default async function DownloadPage({
     searchParams

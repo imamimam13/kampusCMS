@@ -4,7 +4,8 @@ import Image from "next/image"
 import { Calendar, MapPin, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export const revalidate = 3600 // Revalidate every hour
+// Force dynamic rendering to skip build-time DB check
+export const dynamic = 'force-dynamic'
 
 export default async function AgendaPage() {
     // Fetch upcoming events first
