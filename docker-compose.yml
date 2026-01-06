@@ -2,15 +2,16 @@ version: '3.8'
 
 services:
   app:
-    image: imamwb/kampuscms:latest # Production image
+    image: imamwb/kampuscms:latest
     container_name: kampuscms_app
     restart: always
     environment:
       - DATABASE_URL=postgresql://postgres:password@db:5432/kampuscms?schema=public
       - NEXTAUTH_SECRET=changeme_in_production
-      - NEXTAUTH_URL=http://localhost
+      - NEXTAUTH_URL=http://localhost:8080
     networks:
-      - internal
+      - kampuscms_internal
+      - kampuscms_public
     depends_on:
       - db
 
@@ -25,7 +26,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
-      - internal
+      - kampuscms_internal
     # No ports exposed to host to prevent conflict with other Postgres instances
 
   nginx:
@@ -33,14 +34,14 @@ services:
     container_name: kampuscms_nginx
     restart: always
     ports:
-      - "8080:80" # Exposed on port 8080 to avoid conflict with existing services on port 80
+      - "8080:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
     networks:
-      - internal
-      - default
+      - kampuscms_internal
+      - kampuscms_public
 
   watchtower:
     image: containrrr/watchtower
@@ -48,13 +49,15 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 3600 --cleanup # Check every hour, remove old images
+    command: --interval 3600 --cleanup
     networks:
-      - internal
+      - kampuscms_public
 
 volumes:
   db_data:
 
 networks:
-  internal:
+  kampuscms_internal:
     internal: true
+  kampuscms_public:
+    driver: bridge
