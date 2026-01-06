@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         // Return URL relative to public folder
         const responseData = {
             success: true,
-            url: `/uploads/${finalFilename}`,
+            url: `/uploads/${finalFilename}?v=${Date.now()}`,
             filename: finalFilename,
             size: buffer.length,
             width,
