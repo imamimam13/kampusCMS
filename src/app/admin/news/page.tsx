@@ -18,7 +18,7 @@ export default async function PostsPage() {
                     <p className="text-muted-foreground">Manage campus news and blog posts.</p>
                 </div>
                 <Button asChild>
-                    <Link href="/admin/posts/new">
+                    <Link href="/admin/news/new">
                         <Plus className="mr-2 h-4 w-4" />
                         Create New Post
                     </Link>
@@ -54,7 +54,7 @@ export default async function PostsPage() {
                             </div>
                             <div className="col-span-2 flex items-center justify-end gap-2">
                                 <Button asChild variant="ghost" size="icon">
-                                    <Link href={`/admin/posts/${post.id}`}>
+                                    <Link href={`/admin/news/${post.id}`}>
                                         <Edit className="h-4 w-4" />
                                     </Link>
                                 </Button>

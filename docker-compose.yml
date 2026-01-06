@@ -2,8 +2,7 @@ version: '3.8'
 
 services:
   app:
-    # In production, replace 'build: .' with your image name, e.g., 'image: ghcr.io/youruser/kampuscms:latest'
-    build: . 
+    image: imamwb/kampuscms:latest # Production image
     container_name: kampuscms_app
     restart: always
     environment:
@@ -42,6 +41,16 @@ services:
     networks:
       - internal
       - default
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: kampuscms_watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 3600 --cleanup # Check every hour, remove old images
+    networks:
+      - internal
 
 volumes:
   db_data:

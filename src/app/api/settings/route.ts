@@ -26,7 +26,7 @@ export async function PUT(req: Request) {
 
     try {
         const body = await req.json()
-        const { name, description, logo, colors, fonts, headerLinks, footerText, headCode, bodyCode, aiConfig } = body
+        const { name, description, logo, colors, fonts, headerLinks, footerText, headCode, bodyCode, aiConfig, pddiktiUrl } = body
 
         // Upsert logic (update if exists, create if not)
         // We assume there's only one record, so we findFirst
@@ -37,13 +37,13 @@ export async function PUT(req: Request) {
             settings = await prisma.siteSettings.update({
                 where: { id: existing.id },
                 data: {
-                    name, description, logo, colors, fonts, headerLinks, footerText, headCode, bodyCode, aiConfig
+                    name, description, logo, colors, fonts, headerLinks, footerText, headCode, bodyCode, aiConfig, pddiktiUrl
                 }
             })
         } else {
             settings = await prisma.siteSettings.create({
                 data: {
-                    name, description, logo, colors, fonts, headerLinks, footerText, headCode, bodyCode, aiConfig
+                    name, description, logo, colors, fonts, headerLinks, footerText, headCode, bodyCode, aiConfig, pddiktiUrl
                 }
             })
         }

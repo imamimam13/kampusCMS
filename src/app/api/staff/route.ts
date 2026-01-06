@@ -65,3 +65,33 @@ export async function PUT(req: Request) {
         return new NextResponse("Internal Error", { status: 500 })
     }
 }
+// DELETE
+export async function DELETE(req: Request) {
+    const session = await auth()
+    if (!session) return new NextResponse("Unauthorized", { status: 401 })
+
+    try {
+        const { searchParams } = new URL(req.url)
+        const id = searchParams.get("id")
+        const ids = searchParams.get("ids") // comma separated
+
+        if (ids) {
+            const idList = ids.split(',')
+            await prisma.staff.deleteMany({
+                where: { id: { in: idList } }
+            })
+            return new NextResponse("Deleted count: " + idList.length, { status: 200 })
+        }
+
+        if (!id) return new NextResponse("ID required", { status: 400 })
+
+        await prisma.staff.delete({
+            where: { id }
+        })
+
+        return new NextResponse("Deleted", { status: 200 })
+    } catch (error) {
+        console.error("[STAFF_DELETE]", error)
+        return new NextResponse("Internal Error", { status: 500 })
+    }
+}

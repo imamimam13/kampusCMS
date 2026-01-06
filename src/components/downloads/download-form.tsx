@@ -6,56 +6,58 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import { FileText, UploadCloud, Loader2, CheckCircle } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "sonner"
 
 interface DownloadFormProps {
-    initialData?: any
+    initialData?: {
+        id: string
+        title: string
+        category: string
+        fileUrl: string
+    } | null
 }
 
-const CATEGORIES = ["Academic", "Administrative", "Student Life", "Research", "Other"]
+const CATEGORIES = ["Akademik", "Panduan", "SK", "Umum", "Lainnya"]
 
 export function DownloadForm({ initialData }: DownloadFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [uploading, setUploading] = useState(false)
-    const fileInputRef = useRef<HTMLInputElement>(null)
-
     const [title, setTitle] = useState(initialData?.title || "")
     const [fileUrl, setFileUrl] = useState(initialData?.fileUrl || "")
-    const [category, setCategory] = useState(initialData?.category || "Academic")
+    const [category, setCategory] = useState(initialData?.category || "Akademik")
+
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files?.[0]) return
+        const file = e.target.files?.[0]
+        if (!file) return
 
-        const file = e.target.files[0]
         setUploading(true)
-
-        // Find a way to default the title if empty
-        if (!title) {
-            // Remove extension and underscores for a cleaner title
-            const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ")
-            setTitle(cleanName)
-        }
-
         const formData = new FormData()
-        formData.append('file', file)
+        formData.append("file", file)
 
         try {
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
             })
 
             if (!res.ok) throw new Error("Upload failed")
 
             const data = await res.json()
             setFileUrl(data.url)
+            toast.success("File uploaded successfully")
         } catch (error) {
             console.error(error)
-            alert("Upload failed. Please try again.")
+            toast.error("Failed to upload file")
         } finally {
             setUploading(false)
             // Reset input so same file can be selected again if needed
-            if (fileInputRef.current) fileInputRef.current.value = ''
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ""
+            }
         }
     }
 
@@ -64,21 +66,27 @@ export function DownloadForm({ initialData }: DownloadFormProps) {
         setLoading(true)
 
         try {
-            const data = { title, fileUrl, category }
+            const url = initialData?.id ? `/api/downloads/${initialData.id}` : "/api/downloads"
+            const method = initialData?.id ? "PATCH" : "POST"
 
-            const res = await fetch('/api/downloads', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+            const res = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    title,
+                    category,
+                    fileUrl,
+                }),
             })
 
             if (!res.ok) throw new Error("Failed to save")
 
-            router.push('/admin/downloads')
             router.refresh()
+            router.push("/admin/downloads")
+            toast.success(initialData?.id ? "Document updated" : "Document created")
         } catch (error) {
             console.error(error)
-            alert("Something went wrong")
+            toast.error("Something went wrong")
         } finally {
             setLoading(false)
         }
@@ -86,71 +94,77 @@ export function DownloadForm({ initialData }: DownloadFormProps) {
 
     return (
         <form onSubmit={onSubmit} className="space-y-8 max-w-xl">
-            <div className="space-y-4">
-                <div className="space-y-2">
-                    <Label>Document Title</Label>
-                    <Input
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                        placeholder="e.g. Academic Calendar 2025"
-                    />
-                </div>
+            <div className="space-y-2">
+                <Label>Title</Label>
+                <Input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Document title"
+                    required
+                />
+            </div>
 
-                <div className="space-y-2">
-                    <Label>Category</Label>
-                    <select
-                        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                    >
+            <div className="space-y-2">
+                <Label>Category</Label>
+                <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent>
                         {CATEGORIES.map(cat => (
-                            <option key={cat} value={cat}>{cat}</option>
+                            <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                         ))}
-                    </select>
-                </div>
+                    </SelectContent>
+                </Select>
+            </div>
 
-                <div className="space-y-2">
-                    <Label>File URL</Label>
-                    <div className="flex gap-2">
-                        <Input
-                            value={fileUrl}
-                            onChange={(e) => setFileUrl(e.target.value)}
-                            required
-                            placeholder="https://... or upload a file"
-                        />
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            className="hidden"
-                            onChange={handleFileSelect}
-                        />
-                        <Button
-                            type="button"
-                            variant={uploading ? "secondary" : "outline"}
-                            size="icon"
-                            onClick={() => fileInputRef.current?.click()}
-                            disabled={uploading}
-                        >
-                            {uploading ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                                <UploadCloud className="h-4 w-4" />
-                            )}
-                        </Button>
-                    </div>
-                    {fileUrl && fileUrl.startsWith('/uploads/') && (
-                        <div className="flex items-center gap-2 text-xs text-green-600 mt-1">
-                            <CheckCircle className="h-3 w-3" />
-                            File uploaded successfully
-                        </div>
-                    )}
-                    <p className="text-xs text-muted-foreground">Upload a file or paste a direct URL.</p>
+            <div className="space-y-2">
+                <Label>File URL</Label>
+                <div className="flex gap-2">
+                    <Input
+                        value={fileUrl}
+                        onChange={(e) => setFileUrl(e.target.value)}
+                        required
+                        placeholder="https://... or upload a file"
+                    />
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        onChange={handleFileSelect}
+                    />
+                    <Button
+                        type="button"
+                        variant={uploading ? "secondary" : "outline"}
+                        size="icon"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                    >
+                        {uploading ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                            <UploadCloud className="h-4 w-4" />
+                        )}
+                    </Button>
                 </div>
+                {fileUrl && fileUrl.startsWith('/uploads/') && (
+                    <div className="flex items-center gap-2 text-xs text-green-600 mt-1">
+                        <CheckCircle className="h-3 w-3" />
+                        File uploaded successfully
+                    </div>
+                )}
+                <p className="text-xs text-muted-foreground">Upload a file or paste a direct URL.</p>
             </div>
 
             <Button type="submit" disabled={loading || uploading}>
-                {loading ? "Saving..." : "Add Document"}
+                {loading ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                    </>
+                ) : (
+                    initialData?.id ? "Update Document" : "Add Document"
+                )}
             </Button>
         </form>
     )

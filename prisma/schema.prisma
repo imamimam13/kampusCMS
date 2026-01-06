@@ -70,6 +70,7 @@ model Staff {
   userId    String?  @unique // Link to User account
   user      User?    @relation(fields: [userId], references: [id])
   posts     Post[]
+  headedProdi ProgramStudi[] @relation("HeadOfProdi")
 }
 
 model Event {
@@ -145,6 +146,9 @@ model SiteSettings {
   headCode    String?  // Google Verification, etc.
   bodyCode    String?  // Analytics, etc.
 
+  // External APIs
+  pddiktiUrl  String?  @default("https://api-frontend.kemdikbud.go.id")
+
   // AI Configuration
   aiConfig    Json?    // { provider: 'gemini' | 'openai', geminiKey: '...', openaiKey: '...' }
   
@@ -160,4 +164,58 @@ model Alert {
   endDate   DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ProgramStudi {
+  id            String   @id @default(cuid())
+  code          String   @unique // e.g. "TI"
+  name          String   // e.g. "Teknik Informatika"
+  degree        String   // e.g. "S1"
+  vision        String?  @db.Text
+  mission       String?  @db.Text
+  accreditation String?  // e.g. "Unggul"
+  
+  headOfProdiId String?
+  headOfProdi   Staff?   @relation("HeadOfProdi", fields: [headOfProdiId], references: [id])
+  
+  curriculum    Json?    // Structure: [{ semester: 1, courses: [{ code: "TI101", name: "Algorithm", credits: 3 }] }]
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model TracerResponse {
+  id            String   @id @default(cuid())
+  nim           String   @unique
+  nama          String
+  kodeProdi     String
+  tahunLulus    Int
+  
+  // Contact
+  nomorHP       String?
+  email         String?
+  
+  // F8: Employment Status
+  // "Kerja", "Wirausaha", "Studi", "Mencari", "Tidak"
+  status        String   
+  
+  // Job Data (if Working/Entrepreneur)
+  bidangKerja   String?  // F1101: Swasta, Pemerintah, BUMN, Sendiri, Ngo
+  namaPerusahaan String?
+  jenisInstansi String? 
+  jabatan       String?
+  
+  // F502: Waiting Time (months)
+  waktuTunggu   Int?     
+  
+  // F505: Salary Range
+  gaji          String?  
+  
+  // Relevance
+  kesesuaianBidang String? // Sangat Sesuai, Sesuai, Kurang, Tidak
+  
+  feedback      String?  @db.Text
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

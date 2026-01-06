@@ -39,6 +39,7 @@ export function StaffForm({ initialData }: StaffFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
 
+
     // Basic Fields
     const [name, setName] = useState(initialData?.name || "")
     const [slug, setSlug] = useState(initialData?.slug || "")
@@ -125,12 +126,7 @@ export function StaffForm({ initialData }: StaffFormProps) {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label>NIDN / NIP (Lecturer ID)</Label>
-                        <div className="flex gap-2">
-                            <Input value={nidn} onChange={(e) => setNidn(e.target.value)} placeholder="Nomor Induk Dosen Nasional" />
-                            <Button type="button" variant="outline" onClick={() => alert("PDDikti Sync Implementation in Next Step")}>
-                                Sync PDDikti
-                            </Button>
-                        </div>
+                        <Input value={nidn} onChange={(e) => setNidn(e.target.value)} placeholder="Nomor Induk Dosen Nasional" />
                     </div>
                     <div className="space-y-2">
                         <Label>Role / Jabatan</Label>
@@ -221,9 +217,31 @@ export function StaffForm({ initialData }: StaffFormProps) {
                 })}
             </div>
 
-            <Button type="submit" disabled={loading}>
-                {loading ? "Saving..." : "Save Dosen / Staff"}
-            </Button>
+            <div className="flex justify-between">
+                <Button type="button" variant="destructive" onClick={async () => {
+                    if (!initialData?.id) return
+                    if (!confirm("Are you sure you want to delete this staff member? This cannot be undone.")) return
+
+                    setLoading(true)
+                    try {
+                        const res = await fetch(`/api/staff?id=${initialData.id}`, { method: "DELETE" })
+                        if (!res.ok) throw new Error("Failed to delete")
+                        router.push('/admin/staff')
+                        router.refresh()
+                    } catch (error) {
+                        console.error(error)
+                        alert("Failed to delete")
+                        setLoading(false)
+                    }
+                }} disabled={loading || !initialData}>
+                    <Trash className="mr-2 h-4 w-4" />
+                    Delete Staff
+                </Button>
+
+                <Button type="submit" disabled={loading}>
+                    {loading ? "Saving..." : "Save Dosen / Staff"}
+                </Button>
+            </div>
         </form>
     )
 }

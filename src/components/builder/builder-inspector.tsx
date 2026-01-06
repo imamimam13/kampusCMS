@@ -361,11 +361,18 @@ export function BuilderInspector() {
                         </div>
                         <div className="space-y-2 mt-2">
                             <Label>Category Filter (Optional)</Label>
-                            <Input
+                            <select
+                                className="w-full border rounded-md p-2 text-sm"
                                 value={selectedBlock.content.category || ''}
                                 onChange={(e) => handleUpdate('category', e.target.value)}
-                                placeholder="e.g. Academic"
-                            />
+                            >
+                                <option value="">All Categories</option>
+                                <option value="Akademik">Akademik</option>
+                                <option value="Panduan">Panduan</option>
+                                <option value="SK">SK</option>
+                                <option value="Umum">Umum</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
                         </div>
                     </div>
                 )}
@@ -697,6 +704,44 @@ export function BuilderInspector() {
                     </div>
                 )}
 
+                {selectedBlock.type === 'prodi-grid' && (
+                    <div className="space-y-2">
+                        <Label>Section Title</Label>
+                        <Input
+                            value={selectedBlock.content.title || ''}
+                            onChange={(e) => handleUpdate('title', e.target.value)}
+                        />
+                        <Label>Description</Label>
+                        <Textarea
+                            value={selectedBlock.content.description || ''}
+                            onChange={(e) => handleUpdate('description', e.target.value)}
+                        />
+                        <div className="space-y-2 mt-2">
+                            <Label>Items to Show</Label>
+                            <Input
+                                type="number"
+                                value={selectedBlock.content.count || 6}
+                                onChange={(e) => handleUpdate('count', parseInt(e.target.value))}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {selectedBlock.type === 'tracer-stats' && (
+                    <div className="space-y-2">
+                        <Label>Section Title</Label>
+                        <Input
+                            value={selectedBlock.content.title || ''}
+                            onChange={(e) => handleUpdate('title', e.target.value)}
+                        />
+                        <Label>Description</Label>
+                        <Textarea
+                            value={selectedBlock.content.description || ''}
+                            onChange={(e) => handleUpdate('description', e.target.value)}
+                        />
+                    </div>
+                )}
+
                 {selectedBlock.type === 'columns' && (
                     <div className="space-y-4">
                         <div className="space-y-2">
@@ -858,7 +903,7 @@ export function BuilderInspector() {
 
 
                 {/* Generic fallback for remaining unknown types */}
-                {!['hero', 'text', 'features', 'news-grid', 'staff-grid', 'calendar', 'download', 'image', 'gallery', 'carousel', 'separator', 'cards', 'contact', 'columns', 'about'].includes(selectedBlock.type) && (
+                {!['hero', 'text', 'features', 'news-grid', 'staff-grid', 'calendar', 'download', 'image', 'gallery', 'carousel', 'separator', 'cards', 'contact', 'columns', 'about', 'prodi-grid', 'tracer-stats'].includes(selectedBlock.type) && (
                     <div className="space-y-2">
                         <p className="text-sm text-yellow-600 bg-yellow-50 p-2 rounded">
                             Field editor for <strong>{selectedBlock.type}</strong> is under construction.

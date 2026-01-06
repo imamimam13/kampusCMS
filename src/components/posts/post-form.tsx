@@ -44,7 +44,7 @@ export function PostForm({ initialData }: PostFormProps) {
 
             if (!res.ok) throw new Error("Failed to save")
 
-            router.push('/admin/posts')
+            router.push('/admin/news')
             router.refresh()
         } catch (error) {
             alert("Something went wrong")

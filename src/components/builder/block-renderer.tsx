@@ -13,6 +13,9 @@ import { CardGridBlock } from "./blocks/card-grid-block"
 import { ContactBlock } from "./blocks/contact-block"
 import { ColumnsBlock } from "./blocks/columns-block"
 import { AboutBlock } from "./blocks/about-block"
+import { ProdiGridBlock } from "./blocks/prodi-grid-block"
+
+import { TracerStatsBlock } from "./blocks/tracer-stats-block"
 
 export function BlockRenderer({ block }: { block: BlockData }) {
     switch (block.type) {
@@ -42,6 +45,10 @@ export function BlockRenderer({ block }: { block: BlockData }) {
             return <ColumnsBlock data={block} />
         case "about":
             return <AboutBlock data={block} />
+        case "prodi-grid":
+            return <ProdiGridBlock content={block.content} />
+        case "tracer-stats":
+            return <TracerStatsBlock content={block.content} />
         case "image":
             return <ImageBlock data={block} />
         case "text":

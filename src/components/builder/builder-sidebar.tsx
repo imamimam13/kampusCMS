@@ -18,7 +18,8 @@ import {
     Users,
     Contact,
     Columns,
-    Info
+    Info,
+    GraduationCap
 } from "lucide-react"
 
 const availableBlocks: { type: BlockType; label: string; icon: any }[] = [
@@ -36,6 +37,8 @@ const availableBlocks: { type: BlockType; label: string; icon: any }[] = [
     { type: "carousel", label: "Image Carousel", icon: Images },
     { type: "separator", label: "Spacer / Separator", icon: SquareDashedBottom },
     { type: "calendar", label: "Events Calendar", icon: Calendar },
+    { type: "prodi-grid", label: "Academic Programs", icon: GraduationCap },
+    { type: "tracer-stats", label: "Tracer Stats", icon: Users },
     { type: "download", label: "Download Center", icon: Download },
 ]
 

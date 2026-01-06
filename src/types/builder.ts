@@ -1,4 +1,4 @@
-export type BlockType = 'hero' | 'features' | 'news-grid' | 'staff-grid' | 'text' | 'image' | 'video' | 'calendar' | 'download' | 'gallery' | 'carousel' | 'separator' | 'cards' | 'contact' | 'columns' | 'about'
+export type BlockType = 'hero' | 'features' | 'news-grid' | 'staff-grid' | 'text' | 'image' | 'video' | 'calendar' | 'download' | 'gallery' | 'carousel' | 'separator' | 'cards' | 'contact' | 'columns' | 'about' | 'prodi-grid' | 'tracer-stats'
 
 export interface BlockData {
     id: string
@@ -34,6 +34,11 @@ export const defaultBlockContent: Record<BlockType, any> = {
     "staff-grid": {
         title: "Meet Our Team",
         count: 4 // Number of staff to show (or 'all')
+    },
+    "prodi-grid": {
+        title: "Our Academic Programs",
+        description: "Explore our wide range of study programs.",
+        count: 6
     },
     text: {
         html: "<p>Write your content here...</p>"
@@ -103,5 +108,9 @@ export const defaultBlockContent: Record<BlockType, any> = {
             { label: "Faculty", value: "300+" },
             { label: "Years", value: "50" }
         ]
+    },
+    'tracer-stats': {
+        title: "Alumni Success",
+        description: "See how our graduates are performing in the professional world."
     }
 }

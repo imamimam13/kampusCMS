@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, User, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -20,10 +20,9 @@ export function AdminHeader() {
     const [open, setOpen] = useState(false)
     const [mounted, setMounted] = useState(false)
 
-    // Prevent hydration mismatch for Radix UI
-    if (typeof window !== 'undefined' && !mounted) {
+    useEffect(() => {
         setMounted(true)
-    }
+    }, [])
 
     // Return empty div or simpler header during SSR if needed, 
     // but just checking mounted for the Sheet is often enough.

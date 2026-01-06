@@ -13,13 +13,17 @@ import {
     Users,
     Image as ImageIcon,
     Settings,
-    Megaphone
+    Megaphone,
+    GraduationCap,
+    BarChart
 } from "lucide-react"
 
 const sidebarItems = [
     { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/admin/pages", icon: FileText, label: "Pages" },
-    { href: "/admin/posts", icon: Newspaper, label: "News & Posts" },
+    { href: "/admin/prodi", icon: GraduationCap, label: "Program Studi" },
+    { href: "/admin/tracer", icon: BarChart, label: "Tracer Study" },
+    { href: "/admin/news", icon: Newspaper, label: "News & Posts" },
     { href: "/admin/calendar", icon: Calendar, label: "Calendar" },
     { href: "/admin/downloads", icon: Download, label: "Downloads" },
     { href: "/admin/staff", icon: Users, label: "Dosen / Staff Directory" },

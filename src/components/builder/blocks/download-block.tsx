@@ -12,7 +12,14 @@ export function DownloadBlock({ data }: { data: BlockData }) {
 
     useEffect(() => {
         const count = data.content.count || 5
-        fetch(`/api/downloads?limit=${count}`)
+        const category = data.content.category
+
+        let url = `/api/downloads?limit=${count}`
+        if (category && category !== 'All') {
+            url += `&category=${category}`
+        }
+
+        fetch(url)
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {
@@ -21,7 +28,7 @@ export function DownloadBlock({ data }: { data: BlockData }) {
             })
             .catch(err => console.error(err))
             .finally(() => setLoading(false))
-    }, [data.content.count])
+    }, [data.content.count, data.content.category])
 
     // If waiting for data or no events
     if (!loading && downloads.length === 0) {
