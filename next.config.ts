@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
+    unoptimized: true, // Disable optimization to serve images directly from Nginx/Disk
     remotePatterns: [
       {
         protocol: 'http',
