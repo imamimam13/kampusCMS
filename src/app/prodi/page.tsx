@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { GraduationCap, ArrowRight } from "lucide-react"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
     title: "Program Studi - Academic Framework",
     description: "Explore our academic study programs."

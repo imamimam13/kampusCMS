@@ -5,8 +5,8 @@ import { Search, UserCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-// Revalidate every hour
-export const revalidate = 3600
+// Force dynamic rendering to skip build-time DB check
+export const dynamic = 'force-dynamic'
 
 export default async function StaffDirectoryPage({
     searchParams

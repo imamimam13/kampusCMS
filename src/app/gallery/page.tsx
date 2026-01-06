@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Image as ImageIcon } from "lucide-react"
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function GalleryPage() {
     const albums = await prisma.galleryAlbum.findMany({
