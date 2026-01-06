@@ -28,7 +28,7 @@ export default async function DownloadPage({
         orderBy: { createdAt: 'desc' }
     })
 
-    const categories = ["All", "Academic", "Administrative", "Student Life", "Research", "Other"]
+    const categories = ["All", "Akademik", "Panduan", "SK", "Penelitian", "Kemahasiswaan", "Lainnya"]
 
     return (
         <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">

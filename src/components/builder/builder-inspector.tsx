@@ -366,11 +366,12 @@ export function BuilderInspector() {
                                 value={selectedBlock.content.category || ''}
                                 onChange={(e) => handleUpdate('category', e.target.value)}
                             >
-                                <option value="">All Categories</option>
+                                <option value="All">All Categories</option>
                                 <option value="Akademik">Akademik</option>
                                 <option value="Panduan">Panduan</option>
                                 <option value="SK">SK</option>
-                                <option value="Umum">Umum</option>
+                                <option value="Penelitian">Penelitian</option>
+                                <option value="Kemahasiswaan">Kemahasiswaan</option>
                                 <option value="Lainnya">Lainnya</option>
                             </select>
                         </div>

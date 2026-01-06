@@ -18,7 +18,7 @@ interface DownloadFormProps {
     } | null
 }
 
-const CATEGORIES = ["Akademik", "Panduan", "SK", "Umum", "Lainnya"]
+const CATEGORIES = ["Akademik", "Panduan", "SK", "Penelitian", "Kemahasiswaan", "Lainnya"]
 
 export function DownloadForm({ initialData }: DownloadFormProps) {
     const router = useRouter()
