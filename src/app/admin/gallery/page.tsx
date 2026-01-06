@@ -37,7 +37,7 @@ export default async function GalleryAdminPage() {
                         <p>No albums found. Click "Create Album" to start.</p>
                     </div>
                 ) : (
-                    albums.map((album) => (
+                    albums.map((album: any) => (
                         <Link
                             key={album.id}
                             href={`/admin/gallery/${album.id}`}
