@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 
+export const dynamic = 'force-dynamic'
+
 export default async function ProdiManagement() {
     const prodiList = await prisma.programStudi.findMany({
         orderBy: { name: 'asc' },

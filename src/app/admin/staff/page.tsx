@@ -5,6 +5,8 @@ import { Plus, Pencil, Trash2 } from "lucide-react"
 import { CsvImporter } from "@/components/admin/csv-importer"
 import { StaffTable } from "@/components/admin/staff-table"
 
+export const dynamic = 'force-dynamic'
+
 
 export default async function StaffManagement() {
     const staff = await prisma.staff.findMany({
