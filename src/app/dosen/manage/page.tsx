@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import { DosenEditor } from "@/components/dosen/dosen-editor"
 
+export const dynamic = 'force-dynamic'
+
 export default async function DosenManagePage() {
     const session = await auth()
 
