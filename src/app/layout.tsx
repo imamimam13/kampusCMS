@@ -14,7 +14,12 @@ const geistMono = Geist_Mono({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await prisma.siteSettings.findFirst()
+  let settings
+  try {
+    settings = await prisma.siteSettings.findFirst()
+  } catch (e) {
+    console.warn("Could not fetch settings (build mode?)")
+  }
   return {
     title: settings?.name || "KampusCMS",
     description: settings?.description || "Campus Management System",
@@ -29,7 +34,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await prisma.siteSettings.findFirst()
+  let settings
+  try {
+    settings = await prisma.siteSettings.findFirst()
+  } catch (e) {
+    console.warn("Could not fetch settings (build mode?)")
+  }
+
   const colors = (settings?.colors as any) || { primary: '#0f172a', secondary: '#3b82f6' }
 
   return (
