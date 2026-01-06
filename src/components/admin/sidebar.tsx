@@ -15,7 +15,8 @@ import {
     Settings,
     Megaphone,
     GraduationCap,
-    BarChart
+    BarChart,
+    DatabaseBackup
 } from "lucide-react"
 
 const sidebarItems = [
@@ -30,6 +31,7 @@ const sidebarItems = [
     { href: "/admin/gallery", icon: ImageIcon, label: "Gallery" },
     { href: "/admin/alerts", icon: Megaphone, label: "Alerts" },
     { href: "/admin/settings", icon: Settings, label: "Settings" },
+    { href: "/admin/settings/backup", icon: DatabaseBackup, label: "Backup & Restore" },
 ]
 
 export function AdminSidebar({ className, setOpen }: { className?: string, setOpen?: (open: boolean) => void }) {
