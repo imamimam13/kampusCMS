@@ -35,3 +35,15 @@ jobs:
           imamwb/kampuscms:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+
+    - name: Build and push Nginx
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: Dockerfile.nginx
+        push: true
+        tags: |
+          imamwb/kampuscms-nginx:latest
+          imamwb/kampuscms-nginx:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
