@@ -1,4 +1,7 @@
-# 🎓 KampusCMS
+<div align="center">
+  <img src="public/kampuscms-logo.png" alt="KampusCMS Logo" width="200" />
+  <h1>KampusCMS</h1>
+</div>
 
 **KampusCMS** is a modern, comprehensive Content Management System designed specifically for Indonesian universities and academic institutions. Built with the latest web technologies, it offers a seamless experience for managing academic portals, news, events, and alumni data.
 
@@ -22,6 +25,7 @@
 -   **Role-Based Access Control**: Secure dashboard for Admins, Editors, and Lecturers (`dosen`).
 -   **Media Manager**: Centralized file handling.
 -   **Site Settings**: Configure university identity, logos, and theme colors directly from the dashboard.
+-   **Backup & Restore**: Full system backup (Database + Files) and one-click restore functionality to secure your data.
 
 ## 🛠️ Technology Stack
 
