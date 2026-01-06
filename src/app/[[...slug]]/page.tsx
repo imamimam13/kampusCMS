@@ -4,6 +4,8 @@ import { notFound } from "next/navigation"
 import { BlockRenderer } from "@/components/builder/block-renderer"
 import { BlockData } from "@/types/builder"
 
+export const dynamic = 'force-dynamic'
+
 // Next.js 14 catch-all route: [[...slug]]
 // This handles / and /about and /foo/bar etc.
 export default async function PublicPage({ params }: { params: { slug?: string[] } }) {
