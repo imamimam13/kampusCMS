@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
 // GET Single Album
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await params
         const album = await prisma.galleryAlbum.findUnique({
@@ -24,7 +24,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 }
 
 // UPDATE Album
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth()
     if (!session) return new NextResponse("Unauthorized", { status: 401 })
 
@@ -45,7 +45,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 }
 
 // DELETE Album
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth()
     if (!session) return new NextResponse("Unauthorized", { status: 401 })
 

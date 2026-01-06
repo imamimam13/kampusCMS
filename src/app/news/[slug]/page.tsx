@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 
 export const dynamic = 'force-dynamic'
 
-export default async function NewsDetailPage({ params }: { params: { slug: string } }) {
+export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
     const post = await prisma.post.findUnique({
         where: { slug }
@@ -47,7 +47,7 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
 
             <div
                 className="prose prose-lg max-w-none dark:prose-invert"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: post.content || '' }}
             />
         </article>
     )

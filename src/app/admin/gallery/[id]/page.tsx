@@ -5,7 +5,7 @@ import { AlbumForm } from "@/components/gallery/album-form"
 import { AlbumPhotoManager } from "@/components/gallery/album-photo-manager"
 import { DeleteButton } from "@/components/admin/delete-button"
 
-export default async function EditAlbumPage({ params }: { params: { id: string } }) {
+export default async function EditAlbumPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
 
     const album = await prisma.galleryAlbum.findUnique({

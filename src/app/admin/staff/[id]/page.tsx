@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma"
 import { StaffForm } from "@/components/staff/staff-form"
 import { notFound } from "next/navigation"
 
-export default async function EditStaffPage({ params }: { params: { id: string } }) {
+export default async function EditStaffPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const staff = await prisma.staff.findUnique({
         where: { id }
