@@ -6,8 +6,6 @@ import { DeleteButton } from "@/components/admin/delete-button"
 
 export const dynamic = 'force-dynamic'
 
-export const dynamic = 'force-dynamic'
-
 export default async function CalendarAdminPage() {
     const events = await prisma.event.findMany({
         orderBy: { startDate: 'desc' }
