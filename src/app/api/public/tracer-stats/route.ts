@@ -18,11 +18,11 @@ export async function GET() {
         }
 
         // Employment Rate (Kerja + Wirausaha / Total)
-        const workingCount = responses.filter(r => ['Kerja', 'Wirausaha'].includes(r.status)).length
+        const workingCount = responses.filter((r: any) => ['Kerja', 'Wirausaha'].includes(r.status)).length
         const employedRate = Math.round((workingCount / total) * 100)
 
         // Fast Hired (< 6 months) - Denominator is only those who are working
-        const fastHiredCount = responses.filter(r =>
+        const fastHiredCount = responses.filter((r: any) =>
             ['Kerja', 'Wirausaha'].includes(r.status) &&
             r.waktuTunggu !== null &&
             r.waktuTunggu <= 6
@@ -30,7 +30,7 @@ export async function GET() {
         const fastHiredRate = workingCount > 0 ? Math.round((fastHiredCount / workingCount) * 100) : 0
 
         // Relevant Job (Sangat Sesuai + Sesuai) - Denominator is only those who are working
-        const relevantCount = responses.filter(r =>
+        const relevantCount = responses.filter((r: any) =>
             ['Kerja', 'Wirausaha'].includes(r.status) &&
             ['Sangat Sesuai', 'Sesuai'].includes(r.kesesuaianBidang || '')
         ).length
