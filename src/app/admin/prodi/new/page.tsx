@@ -2,6 +2,8 @@
 import { prisma } from "@/lib/prisma"
 import { ProdiForm } from "@/components/prodi/prodi-form"
 
+export const dynamic = 'force-dynamic'
+
 export default async function NewProdiPage() {
     const lecturers = await prisma.staff.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } })
 
