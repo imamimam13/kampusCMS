@@ -24,6 +24,7 @@ export function SettingsForm() {
         footerText: "",
         headCode: "",
         bodyCode: "",
+        footerConfig: { description: "", contact: "" },
         aiConfig: { provider: 'gemini', geminiKey: '', openaiKey: '', openRouterKey: '' }
     })
 
@@ -36,6 +37,7 @@ export function SettingsForm() {
                     ...data,
                     colors: data.colors || { primary: "#0f172a", secondary: "#3b82f6" },
                     fonts: data.fonts || { heading: "Inter", body: "Inter" },
+                    footerConfig: data.footerConfig || { description: "", contact: "" },
                     aiConfig: data.aiConfig || { provider: 'gemini', geminiKey: '', openaiKey: '' }
                 })
             })
@@ -88,6 +90,7 @@ export function SettingsForm() {
                     <TabsTrigger value="general">General</TabsTrigger>
                     <TabsTrigger value="appearance">Appearance</TabsTrigger>
                     <TabsTrigger value="navigation">Navigation</TabsTrigger>
+                    <TabsTrigger value="footer">Footer</TabsTrigger>
                     <TabsTrigger value="scripts">Scripts</TabsTrigger>
                     <TabsTrigger value="ai">AI Integration</TabsTrigger>
                 </TabsList>
@@ -216,6 +219,37 @@ export function SettingsForm() {
                                     onChange={(e) => handleChange('footerText', e.target.value)}
                                     placeholder="© 2024 KampusCMS. All rights reserved."
                                 />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Scripts Settings */}
+                <TabsContent value="footer" className="space-y-4 pt-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Footer Content</CardTitle>
+                            <CardDescription>Customize the content in your site footer.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label>Footer Description</Label>
+                                <Textarea
+                                    value={formData.footerConfig?.description || ''}
+                                    onChange={(e) => handleNestedChange('footerConfig', 'description', e.target.value)}
+                                    placeholder="A modern content management system..."
+                                />
+                                <p className="text-xs text-muted-foreground">Appears under the logo in the first column.</p>
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Contact Info</Label>
+                                <Textarea
+                                    value={formData.footerConfig?.contact || ''}
+                                    onChange={(e) => handleNestedChange('footerConfig', 'contact', e.target.value)}
+                                    placeholder="Jl. Kampus Merdeka No. 123..."
+                                    className="min-h-[100px]"
+                                />
+                                <p className="text-xs text-muted-foreground">Appears in the Contact column. Supports newlines.</p>
                             </div>
                         </CardContent>
                     </Card>

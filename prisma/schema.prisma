@@ -140,6 +140,7 @@ model SiteSettings {
   
   // Layout
   headerLinks Json?    // Array of navigation links
+  footerConfig Json?   // { description: string, contact: string, links: [] }
   footerText  String?
   
   // Scripts & SEO
