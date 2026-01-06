@@ -51,6 +51,8 @@ export async function POST(request: NextRequest) {
 
     // Ensure directory exists
     const uploadDir = path.join(process.cwd(), 'public/uploads')
+    console.log(`[UPLOAD] Processing upload... Target dir: ${uploadDir}`)
+
     try {
         await mkdir(uploadDir, { recursive: true })
     } catch (e) {
@@ -58,9 +60,11 @@ export async function POST(request: NextRequest) {
     }
 
     const filePath = path.join(uploadDir, finalFilename)
+    console.log(`[UPLOAD] Writing file to: ${filePath}`)
 
     try {
         await writeFile(filePath, buffer)
+        console.log(`[UPLOAD] Write successful (size: ${buffer.length})`)
 
         // Get metadata using sharp (even if not compressed)
         let width = 0
@@ -72,20 +76,22 @@ export async function POST(request: NextRequest) {
             width = metadata.width || 0
             height = metadata.height || 0
         } catch (e) {
-            // Ignore if not an image or failed to read metadata
+            console.warn("[UPLOAD] Metadata extraction failed (non-fatal):", e)
         }
 
         // Return URL relative to public folder
-        return NextResponse.json({
+        const responseData = {
             success: true,
             url: `/uploads/${finalFilename}`,
             filename: finalFilename,
             size: buffer.length,
             width,
             height
-        })
+        }
+        console.log(`[UPLOAD] Success:`, responseData.url)
+        return NextResponse.json(responseData)
     } catch (error) {
-        console.error("[UPLOAD_ERROR]", error)
-        return NextResponse.json({ error: "Upload failed" }, { status: 500 })
+        console.error("[UPLOAD_ERROR] Critical failure:", error)
+        return NextResponse.json({ error: "Upload failed: " + (error as Error).message }, { status: 500 })
     }
 }
