@@ -25,6 +25,16 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: "URL or Keyword is required" }, { status: 400 })
         }
 
+        // Validate URL
+        try {
+            const u = new URL(feedUrl)
+            if (!['http:', 'https:'].includes(u.protocol)) {
+                return NextResponse.json({ error: "Invalid protocol" }, { status: 400 })
+            }
+        } catch {
+            return NextResponse.json({ error: "Invalid URL format" }, { status: 400 })
+        }
+
         // Fetch and parse the feed
         const feed = await parser.parseURL(feedUrl)
 
@@ -44,7 +54,13 @@ export async function GET(request: Request) {
             items
         })
 
-    } catch (error) {
+    } catch (error: any) {
+        // Handle specific errors to reduce noise
+        if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED' || error.message?.includes('getaddrinfo')) {
+            console.warn(`[RSS] Failed to fetch feed (network/DNS): ${url || keyword}`)
+            return NextResponse.json({ error: "Could not reach the feed URL" }, { status: 400 })
+        }
+
         console.error("RSS Fetch Error:", error)
         return NextResponse.json({ error: "Failed to fetch RSS feed" }, { status: 500 })
     }

@@ -17,29 +17,37 @@ export function RSSBlock({ data }: { data: BlockData }) {
     const layout = data.content.layout || "grid" // grid | list
 
     useEffect(() => {
-        if (!rssUrl && !keyword) {
-            setLoading(false)
-            return
-        }
+        const timer = setTimeout(() => {
+            if (!rssUrl && !keyword) {
+                setLoading(false)
+                return
+            }
 
-        setLoading(true)
-        setError(false)
+            // Simple validation to avoid searching for "i", "in", etc.
+            if (rssUrl && !rssUrl.startsWith('http') && rssUrl.length < 10) {
+                return;
+            }
 
-        let apiUrl = `/api/rss?limit=${limit}`
-        if (rssUrl) apiUrl += `&url=${encodeURIComponent(rssUrl)}`
-        else if (keyword) apiUrl += `&keyword=${encodeURIComponent(keyword)}`
+            setLoading(true)
+            setError(false)
 
-        fetch(apiUrl)
-            .then(res => {
-                if (!res.ok) throw new Error("Failed")
-                return res.json()
-            })
-            .then(data => {
-                if (data.items) setItems(data.items)
-            })
-            .catch(() => setError(true))
-            .finally(() => setLoading(false))
+            let apiUrl = `/api/rss?limit=${limit}`
+            if (rssUrl) apiUrl += `&url=${encodeURIComponent(rssUrl)}`
+            else if (keyword) apiUrl += `&keyword=${encodeURIComponent(keyword)}`
 
+            fetch(apiUrl)
+                .then(res => {
+                    if (!res.ok) throw new Error("Failed")
+                    return res.json()
+                })
+                .then(data => {
+                    if (data.items) setItems(data.items)
+                })
+                .catch(() => setError(true))
+                .finally(() => setLoading(false))
+        }, 800) // 800ms debounce
+
+        return () => clearTimeout(timer)
     }, [rssUrl, keyword, limit])
 
     if (!rssUrl && !keyword) {
