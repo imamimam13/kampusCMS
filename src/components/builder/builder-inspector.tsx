@@ -1104,6 +1104,36 @@ export function BuilderInspector() {
                             </div>
                         </div>
 
+                        {/* Font Color */}
+                        <div className="space-y-1">
+                            <Label className="text-xs">Font Color</Label>
+                            <div className="flex items-center gap-2">
+                                <div
+                                    className="w-8 h-8 rounded border shadow-sm"
+                                    style={{ backgroundColor: selectedBlock.content.styles?.color || 'inherit' }}
+                                />
+                                <Input
+                                    type="color"
+                                    className="w-full h-8 p-1 cursor-pointer"
+                                    value={selectedBlock.content.styles?.color || '#000000'}
+                                    onChange={(e) => handleUpdate('styles', { ...selectedBlock.content.styles, color: e.target.value })}
+                                />
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    title="Reset Color"
+                                    onClick={() => {
+                                        const newStyles = { ...selectedBlock.content.styles }
+                                        delete newStyles.color
+                                        handleUpdate('styles', newStyles)
+                                    }}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
+
                         {/* Formatting */}
                         <div className="flex gap-2">
                             <Button
