@@ -321,6 +321,8 @@ export function BuilderInspector() {
                                                 }
                                             } catch (err) {
                                                 console.error("Upload failed")
+                                            } finally {
+                                                e.target.value = ''
                                             }
                                         }}
                                     />
@@ -1057,6 +1059,79 @@ export function BuilderInspector() {
                     <Trash2 className="mr-2 h-4 w-4" />
                     Delete Block
                 </Button>
+                {/* Typography Settings (Global for Block) */}
+                <div className="space-y-4 border-t pt-4 mt-8">
+                    <h4 className="font-semibold text-sm text-foreground mb-2">Typography</h4>
+                    <div className="space-y-3">
+                        {/* Font Family */}
+                        <div className="space-y-1">
+                            <Label className="text-xs">Font Family</Label>
+                            <select
+                                className="w-full border rounded-md p-2 text-sm bg-background"
+                                value={selectedBlock.content.styles?.fontFamily || ''}
+                                onChange={(e) => {
+                                    handleUpdate('styles', { ...selectedBlock.content.styles, fontFamily: e.target.value })
+                                }}
+                            >
+                                <option value="">Default (Inherit)</option>
+                                <option value="sans-serif">Sans Serif</option>
+                                <option value="serif">Serif</option>
+                                <option value="monospace">Monospace</option>
+                                <option value="'Inter', sans-serif">Inter</option>
+                                <option value="'Roboto', sans-serif">Roboto</option>
+                                <option value="'Open Sans', sans-serif">Open Sans</option>
+                                <option value="'Helvetica Neue', Helvetica, Arial, sans-serif">Helvetica Neue</option>
+                                <option value="'Georgia', serif">Georgia</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                            </select>
+                        </div>
+
+                        {/* Font Size */}
+                        <div className="space-y-1">
+                            <Label className="text-xs">Base Size</Label>
+                            <div className="flex gap-2">
+                                <Input
+                                    type="number"
+                                    placeholder="16"
+                                    className="h-8"
+                                    value={parseInt(selectedBlock.content.styles?.fontSize) || ''}
+                                    onChange={(e) => {
+                                        const val = e.target.value ? `${e.target.value}px` : undefined
+                                        handleUpdate('styles', { ...selectedBlock.content.styles, fontSize: val })
+                                    }}
+                                />
+                                <span className="text-sm self-center text-muted-foreground">px</span>
+                            </div>
+                        </div>
+
+                        {/* Formatting */}
+                        <div className="flex gap-2">
+                            <Button
+                                variant={selectedBlock.content.styles?.fontWeight === 'bold' ? "secondary" : "outline"}
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => {
+                                    const current = selectedBlock.content.styles?.fontWeight
+                                    handleUpdate('styles', { ...selectedBlock.content.styles, fontWeight: current === 'bold' ? 'normal' : 'bold' })
+                                }}
+                            >
+                                <span className="font-bold">B</span>
+                            </Button>
+                            <Button
+                                variant={selectedBlock.content.styles?.fontStyle === 'italic' ? "secondary" : "outline"}
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => {
+                                    const current = selectedBlock.content.styles?.fontStyle
+                                    handleUpdate('styles', { ...selectedBlock.content.styles, fontStyle: current === 'italic' ? 'normal' : 'italic' })
+                                }}
+                            >
+                                <span className="italic">I</span>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     )
