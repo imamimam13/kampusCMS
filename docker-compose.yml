@@ -13,6 +13,8 @@ services:
     networks:
       - kampuscms_internal
       - kampuscms_public
+    labels:
+      - "com.centurylinklabs.watchtower.scope=kampuscms-scope"
     depends_on:
       - db
     volumes:
@@ -45,6 +47,8 @@ services:
     networks:
       - kampuscms_internal
       - kampuscms_public
+    labels:
+      - "com.centurylinklabs.watchtower.scope=kampuscms-scope"
 
   watchtower:
     image: containrrr/watchtower
@@ -52,7 +56,9 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 600 --cleanup
+    command: --interval 600 --cleanup --scope kampuscms-scope
+    environment:
+      - WATCHTOWER_SCOPE=kampuscms-scope
     networks:
       - kampuscms_public
 
