@@ -13,92 +13,34 @@ model User {
   email     String   @unique
   password  String
   name      String?
-  role      String   @default("editor") // super_admin, site_admin, editor, dosen
+  role      String   @default("editor") // admin, editor, dosen
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
   staff     Staff?
-
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
 }
 
 model Setting {
   key       String   @id
-  value     Json     // System-wide settings (e.g. maintenance mode)
+  value     Json     // Flexible settings (colors, logo, social links)
   updatedAt DateTime @updatedAt
-}
-
-// Multi-Site Core
-model Site {
-  id          String   @id @default(cuid())
-  name        String   @default("KampusCMS")
-  description String?
-  logo        String?  // URL to logo
-  
-  // Domain Configuration
-  subdomain   String   @unique // e.g. "bem", "saintek", "main" (reserved)
-  customDomain String? @unique // e.g. "bem.uwb.ac.id" (optional override)
-  
-  // Theme
-  colors      Json?    // { primary: "#...", secondary: "#..." }
-  fonts       Json?    // { heading: "Inter", body: "Inter" }
-  
-  // Layout
-  headerLinks Json?    // Array of navigation links
-  footerConfig Json?   // { description: string, contact: string, links: [] }
-  footerText  String?
-  
-  // Scripts & SEO
-  headCode    String?  // Google Verification, etc.
-  bodyCode    String?  // Analytics, etc.
-
-  // External APIs
-  pddiktiUrl  String?  @default("https://api-frontend.kemdikbud.go.id")
-
-  // AI Configuration
-  aiConfig    Json?    // { provider: 'gemini' | 'openai', geminiKey: '...', openaiKey: '...' }
-
-  // Builder Configuration
-  enabledBlocks Json?  // List of allowed block types for this site. If null, all blocks are enabled.
-  enabledSidebarItems Json? // List of allowed admin sidebar items. If null, all default items are enabled.
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Content Relations
-  pages       Page[]
-  posts       Post[]
-  events      Event[]
-  downloads   Download[]
-  galleries   GalleryAlbum[]
-  testimonials Testimonial[]
-  alerts      Alert[]
-  prodi       ProgramStudi[]
-  staff       Staff[]
-  users       User[]
 }
 
 // Content Management
 model Page {
   id        String   @id @default(cuid())
   title     String
-  slug      String   // Unique per site, so we remove global @unique constraint
+  slug      String   @unique
   content   Json?    // Block-based content from the Page Builder
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
-
-  @@unique([siteId, slug]) // Ensure unique slug per site
 }
 
 model Post {
   id        String   @id @default(cuid())
   title     String
-  slug      String   
+  slug      String   @unique
   content   String?  @db.Text
   image     String?
   published Boolean  @default(false)
@@ -106,20 +48,15 @@ model Post {
   authorId  String?
   author    Staff?   @relation(fields: [authorId], references: [id])
 
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@unique([siteId, slug])
 }
 
 // Campus Modules
 model Staff {
   id        String   @id @default(cuid())
   name      String
-  slug      String   
+  slug      String   @unique // For personal page: /dosen/nama-dosen
   nidn      String?  // NIDN/NIP
   role      String?  // Lecturer, Dean, etc.
   bio       String?
@@ -134,17 +71,12 @@ model Staff {
   user      User?    @relation(fields: [userId], references: [id])
   posts     Post[]
   headedProdi ProgramStudi[] @relation("HeadOfProdi")
-
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
-  
-  @@unique([siteId, slug])
 }
 
 model Event {
   id          String   @id @default(cuid())
   title       String
-  slug        String
+  slug        String   @unique
   description String?
   startDate   DateTime
   endDate     DateTime?
@@ -153,11 +85,6 @@ model Event {
   category    String?  // Academic, Holiday, etc.
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
-
-  @@unique([siteId, slug])
 }
 
 model Download {
@@ -167,9 +94,6 @@ model Download {
   category  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
 }
 
 model GalleryAlbum {
@@ -180,9 +104,6 @@ model GalleryAlbum {
   images    GalleryImage[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
 }
 
 model GalleryImage {
@@ -205,9 +126,34 @@ model Testimonial {
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
+model SiteSettings {
+  id          String   @id @default(cuid())
+  name        String   @default("KampusCMS")
+  description String?
+  logo        String?  // URL to logo
+  
+  // Theme
+  colors      Json?    // { primary: "#...", secondary: "#..." }
+  fonts       Json?    // { heading: "Inter", body: "Inter" }
+  
+  // Layout
+  headerLinks Json?    // Array of navigation links
+  footerConfig Json?   // { description: string, contact: string, links: [] }
+  footerText  String?
+  
+  // Scripts & SEO
+  headCode    String?  // Google Verification, etc.
+  bodyCode    String?  // Analytics, etc.
+
+  // External APIs
+  pddiktiUrl  String?  @default("https://api-frontend.kemdikbud.go.id")
+
+  // AI Configuration
+  aiConfig    Json?    // { provider: 'gemini' | 'openai', geminiKey: '...', openaiKey: '...' }
+  
+  updatedAt   DateTime @updatedAt
 }
 
 model Alert {
@@ -219,14 +165,11 @@ model Alert {
   endDate   DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
 }
 
 model ProgramStudi {
   id            String   @id @default(cuid())
-  code          String   
+  code          String   @unique // e.g. "TI"
   name          String   // e.g. "Teknik Informatika"
   degree        String   // e.g. "S1"
   vision        String?  @db.Text
@@ -238,13 +181,8 @@ model ProgramStudi {
   
   curriculum    Json?    // Structure: [{ semester: 1, courses: [{ code: "TI101", name: "Algorithm", credits: 3 }] }]
   
-  siteId    String?
-  site      Site?    @relation(fields: [siteId], references: [id])
-
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  
-  @@unique([siteId, code])
 }
 
 model TracerResponse {
@@ -281,7 +219,4 @@ model TracerResponse {
   
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  
-  // Tracer response is global or tied to Prodi, so explicit Site link might not be needed if tied to Prodi,
-  // typically Tracer is centralized. Using 'prodi' code which is linked to Site via ProgramStudi.
 }

@@ -18,6 +18,7 @@ interface BuilderContextType {
     setTitle: (title: string) => void
     slug: string
     setSlug: (slug: string) => void
+    enabledBlocks?: string[] | null
 }
 
 const BuilderContext = createContext<BuilderContextType | undefined>(undefined)
@@ -40,6 +41,7 @@ export function BuilderProvider({ children, initialData }: { children: React.Rea
     const [slug, setSlug] = useState(initialData?.slug || "/")
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false)
+    const [enabledBlocks, setEnabledBlocks] = useState<string[] | null>(initialData?.enabledBlocks || null)
 
     const addBlock = (type: BlockType) => {
         const newBlock: BlockData = {
@@ -103,7 +105,7 @@ export function BuilderProvider({ children, initialData }: { children: React.Rea
         <BuilderContext.Provider value={{
             blocks, addBlock, removeBlock, moveBlock, updateBlockContent,
             saveLayout, isLoading, selectedBlockId, selectBlock,
-            title, setTitle, slug, setSlug
+            title, setTitle, slug, setSlug, enabledBlocks
         }}>
             {children}
         </BuilderContext.Provider>

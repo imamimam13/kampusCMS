@@ -47,7 +47,11 @@ const availableBlocks: { type: BlockType; label: string; icon: any }[] = [
 ]
 
 export function BuilderSidebar() {
-    const { addBlock } = useBuilder()
+    const { addBlock, enabledBlocks } = useBuilder()
+
+    const filteredBlocks = enabledBlocks
+        ? availableBlocks.filter(b => enabledBlocks.includes(b.type))
+        : availableBlocks
 
     return (
         <div className="w-64 border-l bg-background p-4 overflow-y-auto h-[calc(100vh-60px)]">
@@ -55,7 +59,7 @@ export function BuilderSidebar() {
                 Toolbox
             </h3>
             <div className="grid gap-2">
-                {availableBlocks.map((block) => (
+                {filteredBlocks.map((block) => (
                     <Button
                         key={block.type}
                         variant="outline"

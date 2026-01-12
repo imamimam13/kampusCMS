@@ -2,10 +2,18 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
+import { getSiteData } from "@/lib/sites"
+
 // GET (Public)
 export async function GET(req: Request) {
     try {
+        const host = req.headers.get('host') || 'localhost:3000'
+        const site = await getSiteData(host.split(':')[0])
+
+        if (!site) return new NextResponse("Site not found", { status: 404 })
+
         const staff = await prisma.staff.findMany({
+            where: { siteId: site.id },
             orderBy: { name: 'asc' }
         })
         return NextResponse.json(staff)
@@ -23,14 +31,21 @@ export async function POST(req: Request) {
         const body = await req.json()
         const { name, slug, nidn, role, bio, image, links, pddiktiData } = body
 
-        // Check uniqueness of slug
-        const existing = await prisma.staff.findUnique({ where: { slug } })
+        const host = req.headers.get('host') || 'localhost:3000'
+        const site = await getSiteData(host.split(':')[0])
+        if (!site) return new NextResponse("Site not found", { status: 404 })
+
+        // Check uniqueness of slug within site
+        const existing = await prisma.staff.findFirst({
+            where: { slug, siteId: site.id }
+        })
+
         if (existing) {
             return new NextResponse("Slug already exists", { status: 400 })
         }
 
         const staff = await prisma.staff.create({
-            data: { name, slug, nidn, role, bio, image, links, pddiktiData }
+            data: { name, slug, nidn, role, bio, image, links, pddiktiData, siteId: site.id }
         })
 
         return NextResponse.json(staff)

@@ -1,4 +1,6 @@
 import Link from "next/link"
+import { headers } from "next/headers"
+import { getSiteData } from "@/lib/sites"
 import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
 import { Plus, Pencil, ExternalLink } from "lucide-react"
@@ -15,7 +17,14 @@ import { PageListActions } from "@/components/pages/page-list-actions"
 export const dynamic = 'force-dynamic'
 
 export default async function PagesManagement() {
+    const headersList = await headers()
+    const host = headersList.get("host") || "localhost:3000"
+    const site = await getSiteData(host)
+
+    if (!site) return <div>Site not found</div>
+
     const pages = await prisma.page.findMany({
+        where: { siteId: site.id },
         orderBy: { updatedAt: 'desc' }
     })
 

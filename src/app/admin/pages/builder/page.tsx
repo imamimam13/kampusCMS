@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { BuilderClient } from "@/components/builder/builder-client"
+import { getSiteData } from "@/lib/sites"
+import { headers } from "next/headers"
 
 export const dynamic = 'force-dynamic'
 
@@ -27,5 +29,15 @@ export default async function PageBuilder({
         }
     }
 
-    return <BuilderClient initialData={initialData} />
+    // Fetch Site Data for enabledBlocks
+    const headersList = await headers()
+    const host = headersList.get("host") || "localhost:3000"
+    const site = await getSiteData(host)
+
+    const builderData = {
+        ...initialData,
+        enabledBlocks: site?.enabledBlocks || null
+    }
+
+    return <BuilderClient initialData={builderData} />
 }

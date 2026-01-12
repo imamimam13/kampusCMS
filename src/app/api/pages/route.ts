@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { getSiteData } from "@/lib/sites"
 
 // ... imports
 
@@ -12,8 +13,23 @@ export async function POST(req: Request) {
         const body = await req.json()
         const { id, slug, title, content, published } = body
 
+        // Get current site
+        const host = req.headers.get('host') || 'localhost:3000'
+        const site = await getSiteData(host.split(':')[0])
+
+        if (!site) return new NextResponse("Site not found", { status: 404 })
+
+        const siteId = site.id
+
         // If ID is provided, update existing
         if (id) {
+            // Verify ownership
+            const existing = await prisma.page.findFirst({
+                where: { id, siteId }
+            })
+
+            if (!existing) return new NextResponse("Page not found or access denied", { status: 404 })
+
             const updated = await prisma.page.update({
                 where: { id },
                 data: { slug, title, content, published }
@@ -21,12 +37,14 @@ export async function POST(req: Request) {
             return NextResponse.json(updated)
         }
 
-        // Fallback: Check by slug (legacy behavior or new page with specific slug)
-        const existing = await prisma.page.findUnique({ where: { slug } })
+        // Check for existing slug in THIS site
+        const existing = await prisma.page.findFirst({
+            where: { slug, siteId }
+        })
 
         if (existing) {
             const updated = await prisma.page.update({
-                where: { slug },
+                where: { id: existing.id },
                 data: { title, content, published }
             })
             return NextResponse.json(updated)
@@ -34,7 +52,7 @@ export async function POST(req: Request) {
 
         // Create new
         const created = await prisma.page.create({
-            data: { slug, title, content, published }
+            data: { slug, title, content, published, siteId }
         })
         return NextResponse.json(created)
 

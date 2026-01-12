@@ -25,8 +25,30 @@ export function SettingsForm() {
         headCode: "",
         bodyCode: "",
         footerConfig: { description: "", contact: "" },
-        aiConfig: { provider: 'gemini', geminiKey: '', openaiKey: '', openRouterKey: '' }
+        aiConfig: { provider: 'gemini', geminiKey: '', openaiKey: '', openRouterKey: '' },
+        enabledBlocks: null
     })
+
+    const AVAILABLE_BLOCKS = [
+        { id: "hero", label: "Hero Section" },
+        { id: "features", label: "Features List" },
+        { id: "about", label: "About Section" },
+        { id: "gallery", label: "Gallery Grid" },
+        { id: "news-grid", label: "News / Post Grid" },
+        { id: "calendar", label: "Calendar / Events" },
+        { id: "download", label: "Download List" },
+        { id: "contact", label: "Contact Form / Info" },
+        { id: "staff-grid", label: "Staff Directory" },
+        { id: "prodi-grid", label: "Program Studi Grid" },
+        { id: "carousel", label: "Image Carousel" },
+        { id: "card-grid", label: "Card Grid (Generic)" },
+        { id: "columns", label: "Two Columns" },
+        { id: "image", label: "Single Image" },
+        { id: "separator", label: "Separator / Divider" },
+        { id: "social", label: "Social Media Embeds" },
+        { id: "rss", label: "RSS Feed" },
+        { id: "tracer-stats", label: "Tracer Study Stats" },
+    ]
 
     useEffect(() => {
         fetch('/api/settings')
@@ -38,7 +60,8 @@ export function SettingsForm() {
                     colors: data.colors || { primary: "#0f172a", secondary: "#3b82f6" },
                     fonts: data.fonts || { heading: "Inter", body: "Inter" },
                     footerConfig: data.footerConfig || { description: "", contact: "" },
-                    aiConfig: data.aiConfig || { provider: 'gemini', geminiKey: '', openaiKey: '' }
+                    aiConfig: data.aiConfig || { provider: 'gemini', geminiKey: '', openaiKey: '' },
+                    enabledBlocks: data.enabledBlocks || null
                 })
             })
             .catch(err => console.error(err))
@@ -54,6 +77,16 @@ export function SettingsForm() {
             ...prev,
             [parent]: { ...prev[parent], [key]: value }
         }))
+    }
+
+    const toggleBlock = (blockId: string) => {
+        setFormData((prev: any) => {
+            const current = prev.enabledBlocks || AVAILABLE_BLOCKS.map(b => b.id)
+            const updated = current.includes(blockId)
+                ? current.filter((id: string) => id !== blockId)
+                : [...current, blockId]
+            return { ...prev, enabledBlocks: updated }
+        })
     }
 
     const onSubmit = async () => {
@@ -86,13 +119,13 @@ export function SettingsForm() {
             </div>
 
             <Tabs defaultValue="general" className="w-full">
-                <TabsList className="grid w-full grid-cols-5 lg:w-[500px]">
+                <TabsList className="grid w-full grid-cols-6 lg:w-[600px]">
                     <TabsTrigger value="general">General</TabsTrigger>
                     <TabsTrigger value="appearance">Appearance</TabsTrigger>
                     <TabsTrigger value="navigation">Navigation</TabsTrigger>
                     <TabsTrigger value="footer">Footer</TabsTrigger>
+                    <TabsTrigger value="builder">Builder</TabsTrigger>
                     <TabsTrigger value="scripts">Scripts</TabsTrigger>
-                    <TabsTrigger value="ai">AI Integration</TabsTrigger>
                 </TabsList>
 
                 {/* General Settings */}
@@ -156,8 +189,6 @@ export function SettingsForm() {
                             </div>
                         </CardContent>
                     </Card>
-
-
                 </TabsContent>
 
                 {/* Appearance Settings */}
@@ -210,78 +241,6 @@ export function SettingsForm() {
                                         />
                                     </div>
                                 </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>Footer Text</Label>
-                                <Input
-                                    value={formData.footerText || ''}
-                                    onChange={(e) => handleChange('footerText', e.target.value)}
-                                    placeholder="© 2024 KampusCMS. All rights reserved."
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                {/* Scripts Settings */}
-                <TabsContent value="footer" className="space-y-4 pt-4">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Footer Content</CardTitle>
-                            <CardDescription>Customize the content in your site footer.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                <Label>Footer Description</Label>
-                                <Textarea
-                                    value={formData.footerConfig?.description || ''}
-                                    onChange={(e) => handleNestedChange('footerConfig', 'description', e.target.value)}
-                                    placeholder="A modern content management system..."
-                                />
-                                <p className="text-xs text-muted-foreground">Appears under the logo in the first column.</p>
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Contact Info</Label>
-                                <Textarea
-                                    value={formData.footerConfig?.contact || ''}
-                                    onChange={(e) => handleNestedChange('footerConfig', 'contact', e.target.value)}
-                                    placeholder="Jl. Kampus Merdeka No. 123..."
-                                    className="min-h-[100px]"
-                                />
-                                <p className="text-xs text-muted-foreground">Appears in the Contact column. Supports newlines.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                {/* Scripts Settings */}
-                <TabsContent value="scripts" className="space-y-4 pt-4">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Custom Codes</CardTitle>
-                            <CardDescription>Inject custom scripts for analytics, SEO, etc.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="space-y-2">
-                                <Label>Head Code</Label>
-                                <Textarea
-                                    className="font-mono text-xs min-h-[150px]"
-                                    placeholder="<meta name='google-site-verification' ... />"
-                                    value={formData.headCode || ''}
-                                    onChange={(e) => handleChange('headCode', e.target.value)}
-                                />
-                                <p className="text-xs text-muted-foreground">Output just before the closing &lt;/head&gt; tag.</p>
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Body Code</Label>
-                                <Textarea
-                                    className="font-mono text-xs min-h-[150px]"
-                                    placeholder="<script>...</script>"
-                                    value={formData.bodyCode || ''}
-                                    onChange={(e) => handleChange('bodyCode', e.target.value)}
-                                />
-                                <p className="text-xs text-muted-foreground">Output just before the closing &lt;/body&gt; tag.</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -355,82 +314,104 @@ export function SettingsForm() {
                     </Card>
                 </TabsContent>
 
-                {/* AI Settings */}
-                <TabsContent value="ai" className="space-y-4 pt-4">
+                {/* Footer Settings */}
+                <TabsContent value="footer" className="space-y-4 pt-4">
                     <Card>
                         <CardHeader>
-                            <CardTitle>AI Configuration</CardTitle>
-                            <CardDescription>Configure AI providers for content generation.</CardDescription>
+                            <CardTitle>Footer Content</CardTitle>
+                            <CardDescription>Customize the content in your site footer.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label>Footer Text</Label>
+                                <Input
+                                    value={formData.footerText || ''}
+                                    onChange={(e) => handleChange('footerText', e.target.value)}
+                                    placeholder="© 2024 KampusCMS. All rights reserved."
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Footer Description</Label>
+                                <Textarea
+                                    value={formData.footerConfig?.description || ''}
+                                    onChange={(e) => handleNestedChange('footerConfig', 'description', e.target.value)}
+                                    placeholder="A modern content management system..."
+                                />
+                                <p className="text-xs text-muted-foreground">Appears under the logo in the first column.</p>
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Contact Info</Label>
+                                <Textarea
+                                    value={formData.footerConfig?.contact || ''}
+                                    onChange={(e) => handleNestedChange('footerConfig', 'contact', e.target.value)}
+                                    placeholder="Jl. Kampus Merdeka No. 123..."
+                                    className="min-h-[100px]"
+                                />
+                                <p className="text-xs text-muted-foreground">Appears in the Contact column. Supports newlines.</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Page Builder Settings */}
+                <TabsContent value="builder" className="space-y-4 pt-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Page Builder Configuration</CardTitle>
+                            <CardDescription>Control which blocks are available available in the page builder.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {AVAILABLE_BLOCKS.map(block => (
+                                    <div key={block.id} className="flex items-center space-x-2 border p-3 rounded-md">
+                                        <input
+                                            type="checkbox"
+                                            id={`block-${block.id}`}
+                                            checked={!formData.enabledBlocks || formData.enabledBlocks.includes(block.id)}
+                                            onChange={() => toggleBlock(block.id)}
+                                            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                        />
+                                        <Label htmlFor={`block-${block.id}`} className="cursor-pointer font-normal">
+                                            {block.label}
+                                        </Label>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-4 flex gap-2">
+                                <Button type="button" variant="outline" size="sm" onClick={() => handleChange('enabledBlocks', AVAILABLE_BLOCKS.map(b => b.id))}>Select All</Button>
+                                <Button type="button" variant="outline" size="sm" onClick={() => handleChange('enabledBlocks', [])}>Deselect All</Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Scripts Settings */}
+                <TabsContent value="scripts" className="space-y-4 pt-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Custom Codes</CardTitle>
+                            <CardDescription>Inject custom scripts for analytics, SEO, etc.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="space-y-2">
-                                <Label>Default Provider</Label>
-                                <select
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={formData.aiConfig?.provider || 'gemini'}
-                                    onChange={(e) => handleNestedChange('aiConfig', 'provider', e.target.value)}
-                                >
-                                    <option value="gemini">Google Gemini</option>
-                                    <option value="openai">OpenAI (GPT-4/3.5)</option>
-                                    <option value="openrouter">OpenRouter</option>
-                                </select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>Gemini API Key</Label>
-                                <Input
-                                    type="password"
-                                    placeholder="AIza..."
-                                    value={formData.aiConfig?.geminiKey || ''}
-                                    onChange={(e) => handleNestedChange('aiConfig', 'geminiKey', e.target.value)}
+                                <Label>Head Code</Label>
+                                <Textarea
+                                    className="font-mono text-xs min-h-[150px]"
+                                    placeholder="<meta name='google-site-verification' ... />"
+                                    value={formData.headCode || ''}
+                                    onChange={(e) => handleChange('headCode', e.target.value)}
                                 />
+                                <p className="text-xs text-muted-foreground">Output just before the closing &lt;/head&gt; tag.</p>
                             </div>
                             <div className="space-y-2">
-                                <Label>Gemini Model</Label>
-                                <Input
-                                    placeholder="gemini-pro"
-                                    value={formData.aiConfig?.geminiModel || 'gemini-pro'}
-                                    onChange={(e) => handleNestedChange('aiConfig', 'geminiModel', e.target.value)}
+                                <Label>Body Code</Label>
+                                <Textarea
+                                    className="font-mono text-xs min-h-[150px]"
+                                    placeholder="<script>...</script>"
+                                    value={formData.bodyCode || ''}
+                                    onChange={(e) => handleChange('bodyCode', e.target.value)}
                                 />
-                                <p className="text-xs text-muted-foreground">e.g. gemini-pro, gemini-1.5-flash</p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>OpenAI API Key</Label>
-                                <Input
-                                    type="password"
-                                    placeholder="sk-..."
-                                    value={formData.aiConfig?.openaiKey || ''}
-                                    onChange={(e) => handleNestedChange('aiConfig', 'openaiKey', e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>OpenAI Model</Label>
-                                <Input
-                                    placeholder="gpt-3.5-turbo"
-                                    value={formData.aiConfig?.openaiModel || 'gpt-3.5-turbo'}
-                                    onChange={(e) => handleNestedChange('aiConfig', 'openaiModel', e.target.value)}
-                                />
-                                <p className="text-xs text-muted-foreground">e.g. gpt-3.5-turbo, gpt-4</p>
-                            </div>
-
-                            <div className="space-y-2 pt-4 border-t">
-                                <Label>OpenRouter API Key</Label>
-                                <Input
-                                    type="password"
-                                    placeholder="sk-or-..."
-                                    value={formData.aiConfig?.openRouterKey || ''}
-                                    onChange={(e) => handleNestedChange('aiConfig', 'openRouterKey', e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>OpenRouter Model</Label>
-                                <Input
-                                    placeholder="openai/gpt-3.5-turbo"
-                                    value={formData.aiConfig?.openRouterModel || 'openai/gpt-3.5-turbo'}
-                                    onChange={(e) => handleNestedChange('aiConfig', 'openRouterModel', e.target.value)}
-                                />
-                                <p className="text-xs text-muted-foreground">e.g. openai/gpt-4o, anthropic/claude-3-opus</p>
+                                <p className="text-xs text-muted-foreground">Output just before the closing &lt;/body&gt; tag.</p>
                             </div>
                         </CardContent>
                     </Card>

@@ -3,11 +3,20 @@ import { prisma } from "@/lib/prisma"
 import { Button } from "@/components/ui/button"
 import { Plus, Edit, Trash2 } from "lucide-react"
 import { DeleteButton } from "@/components/admin/delete-button"
+import { headers } from "next/headers"
+import { getSiteData } from "@/lib/sites"
 
 export const dynamic = 'force-dynamic'
 
 export default async function PostsPage() {
+    const headersList = await headers()
+    const host = headersList.get("host") || "localhost:3000"
+    const site = await getSiteData(host)
+
+    if (!site) return <div>Site not found</div>
+
     const posts = await prisma.post.findMany({
+        where: { siteId: site.id },
         orderBy: { createdAt: 'desc' },
         include: { author: true }
     })

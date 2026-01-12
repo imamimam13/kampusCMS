@@ -3,25 +3,29 @@ import { prisma } from "@/lib/prisma"
 import { notFound } from "next/navigation"
 import { BlockRenderer } from "@/components/builder/block-renderer"
 import { BlockData } from "@/types/builder"
+import { getSiteData } from "@/lib/sites"
 
 export const dynamic = 'force-dynamic'
 
-// Next.js 14 catch-all route: [[...slug]]
-// This handles / and /about and /foo/bar etc.
-export default async function PublicPage({ params }: { params: { slug?: string[] } }) {
-    // If no slug, it's the home page "/"
-    const { slug } = await params
-    // In Prisma, we might save it as "/" or just empty slug.
-    // Let's assume user saves it as "/" for home.
+export default async function PublicPage({ params }: { params: { site: string, slug?: string[] } }) {
+    const { site: domain, slug } = await params
 
+    // 1. Get Site
+    const siteData = await getSiteData(domain)
+    if (!siteData) {
+        return notFound()
+    }
+
+    // 2. Get Page
     const slugPath = slug ? slug.join("/") : "/"
     const exactSlug = slug ? slugPath : "/"
 
     const page = await prisma.page.findFirst({
         where: {
+            siteId: siteData.id,
             OR: [
                 { slug: exactSlug },
-                { slug: `/${exactSlug}` }, // Try relative path
+                { slug: `/${exactSlug}` },
                 { slug: exactSlug.startsWith('/') ? exactSlug : `/${exactSlug}` }
             ],
             published: true
@@ -29,7 +33,9 @@ export default async function PublicPage({ params }: { params: { slug?: string[]
     })
 
     if (!page) {
-        notFound()
+        // Fallback: If home page "/" and not found, maybe show standard home?
+        // Or just 404.
+        return notFound()
     }
 
     let blocks: BlockData[] = []

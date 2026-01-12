@@ -1,37 +1,40 @@
+
 import { auth } from "@/auth"
+import { NextResponse } from "next/server"
 
 export default auth((req) => {
-    const isLoggedIn = !!req.auth
-    const isOnAdmin = req.nextUrl.pathname.startsWith("/admin")
-    const isOnLogin = req.nextUrl.pathname.startsWith("/login")
+    const url = req.nextUrl
+    let hostname = req.headers.get("host") || ""
 
-    // Block scrapers
-    const userAgent = req.headers.get("user-agent") || ""
-    const lowerUA = userAgent.toLowerCase()
+    // Remove port if present
+    hostname = hostname.split(':')[0]
+
+    const searchParams = req.nextUrl.searchParams.toString()
+    // Pathname excluding search params
+    const path = `${url.pathname}${searchParams.length > 0 ? `?${searchParams}` : ""}`
 
     // List of blocked user agents (partial matches)
     const blockedAgents = [
-        "puppeteer",
-        "cheerio",
-        "headlesschrome",
-        "selenium",
-        "playwright",
-        "postman", // Optional: block API testers in production if needed
-        // "curl",    // Optional: block curl requests
-        "wget"
+        "puppeteer", "cheerio", "headlesschrome", "selenium", "playwright", "postman", "wget"
     ]
-
-    if (blockedAgents.some(agent => lowerUA.includes(agent))) {
-        return new Response("Forbidden: Automated access denied.", { status: 403 })
+    const userAgent = req.headers.get("user-agent")?.toLowerCase() || ""
+    if (blockedAgents.some(agent => userAgent.includes(agent))) {
+        return new NextResponse("Forbidden: Automated access denied.", { status: 403 })
     }
 
-    if (isOnAdmin && !isLoggedIn) {
-        return Response.redirect(new URL("/login", req.nextUrl))
+    // Skip:
+    if (
+        url.pathname.startsWith("/api") ||
+        url.pathname.startsWith("/admin") ||
+        url.pathname.startsWith("/login") ||
+        url.pathname.startsWith("/_next") ||
+        url.pathname.includes(".") // static files
+    ) {
+        return NextResponse.next()
     }
 
-    if (isOnLogin && isLoggedIn) {
-        return Response.redirect(new URL("/admin", req.nextUrl))
-    }
+    // Rewrite logic
+    return NextResponse.rewrite(new URL(`/_sites/${hostname}${path}`, req.url))
 })
 
 export const config = {

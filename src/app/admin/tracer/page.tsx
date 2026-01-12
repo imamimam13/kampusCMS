@@ -7,10 +7,27 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { TracerExportButton } from "@/components/admin/tracer-export-button"
 import { TracerDeleteButton } from "@/components/admin/tracer-delete-button"
 
+import { headers } from "next/headers"
+import { getSiteData } from "@/lib/sites"
+
 export const dynamic = 'force-dynamic'
 
 export default async function TracerAdmin() {
+    const headersList = await headers()
+    const host = headersList.get("host") || "localhost:3000"
+    const site = await getSiteData(host)
+
+    if (!site) return <div>Site not found</div>
+
+    // Get Prodi codes for this site
+    const prodis = await prisma.programStudi.findMany({
+        where: { siteId: site.id },
+        select: { code: true }
+    })
+    const prodiCodes = prodis.map(p => p.code)
+
     const responses = await prisma.tracerResponse.findMany({
+        where: { kodeProdi: { in: prodiCodes } },
         orderBy: { createdAt: 'desc' }
     })
 

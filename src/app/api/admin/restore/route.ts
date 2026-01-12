@@ -1,10 +1,13 @@
 
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
+import { prisma } from "@/lib/prisma"
 import { spawn } from 'child_process'
 import path from 'path'
 import fs from 'fs/promises'
 import AdmZip from 'adm-zip'
+
+export const maxDuration = 300; // 5 minutes
 
 export async function POST(req: Request) {
     const session = await auth()
@@ -61,6 +64,60 @@ export async function POST(req: Request) {
 
             psql.stderr.on('data', (data) => console.error(`psql error: ${data}`))
         })
+
+        // 3.5. Legacy Support: Ensure Schema Compatibility & Migrate Orphans
+        // If the backup was from an older version, it might overwrite tables and remove 'siteId'
+        // We run 'prisma db push' to ensure the schema is current (re-adding siteId if lost)
+        try {
+            console.log("Ensuring schema compatibility...")
+            await new Promise<void>((resolve, reject) => {
+                const push = spawn('npx', ['prisma', 'db', 'push', '--accept-data-loss', '--skip-generate'], {
+                    cwd: process.cwd() // Ensure we are in the project root
+                })
+                push.on('exit', (code) => {
+                    if (code === 0) resolve()
+                    else reject(new Error(`prisma db push exited with code ${code}`))
+                })
+                push.stdout.on('data', (d) => console.log(`prisma: ${d}`))
+                push.stderr.on('data', (d) => console.error(`prisma error: ${d}`))
+            })
+
+            // Fix Orphans: Assign NULL siteId to 'main'
+            // We assume 'main' subdomain exists. If not, we might need to create it or pick one.
+            // For now, let's look for a site with subdomain 'main' or fallback to the first site found.
+            // Note: We need a fresh prisma client or raw query because the schema might have just changed?
+            // Existing prisma client might be okay if we didn't change the TS definitions.
+
+            // Using prisma.$executeRawUnsafe to migrate table by table
+            const tablesWithSiteId = [
+                'Page', 'Post', 'Event', 'Download', 'GalleryAlbum', 'Testimonial', 'Alert', 'ProgramStudi', 'Staff'
+            ]
+
+            // Find Main Site ID
+            const mainSite = await prisma.site.findUnique({ where: { subdomain: 'main' } })
+
+            if (mainSite) {
+                console.log(`Migrating orphaned content to site: ${mainSite.name} (${mainSite.id})`)
+                for (const table of tablesWithSiteId) {
+                    try {
+                        const count = await prisma.$executeRawUnsafe(`UPDATE "${table}" SET "siteId" = '${mainSite.id}' WHERE "siteId" IS NULL;`)
+                        console.log(`Migrated ${count} ${table}s`)
+                    } catch (e) {
+                        console.warn(`Failed to migrate table ${table}:`, e)
+                    }
+                }
+
+                // Also update Users if needed? Users usually global, but if they had siteId...
+                // Only if User model has siteId, which it does now.
+                // await prisma.$executeRawUnsafe(`UPDATE "User" SET "siteId" = '${mainSite.id}' WHERE "siteId" IS NULL;`)
+            } else {
+                console.warn("Main site not found. Skipping orphan migration.")
+            }
+
+        } catch (e) {
+            console.error("Legacy migration failed:", e)
+            // We don't fail the whole request, just log it, as data restore might have been successful enough
+        }
 
         // 4. Restore Uploads
         const uploadsDir = path.join(process.cwd(), 'public/uploads')

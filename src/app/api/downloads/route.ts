@@ -2,6 +2,8 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
+import { getSiteData } from "@/lib/sites"
+
 // GET (Public)
 export async function GET(req: Request) {
     try {
@@ -9,7 +11,15 @@ export async function GET(req: Request) {
         const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined
         const category = searchParams.get('category')
 
-        const where = category && category !== 'All' ? { category } : {}
+        const host = req.headers.get('host') || 'localhost:3000'
+        const site = await getSiteData(host.split(':')[0])
+
+        if (!site) return new NextResponse("Site not found", { status: 404 })
+
+        const where = {
+            siteId: site.id,
+            ...(category && category !== 'All' ? { category } : {})
+        }
 
         const downloads = await prisma.download.findMany({
             where,
@@ -36,8 +46,12 @@ export async function POST(req: Request) {
             return new NextResponse("Missing fields", { status: 400 })
         }
 
+        const host = req.headers.get('host') || 'localhost:3000'
+        const site = await getSiteData(host.split(':')[0])
+        if (!site) return new NextResponse("Site not found", { status: 404 })
+
         const download = await prisma.download.create({
-            data: { title, fileUrl, category }
+            data: { title, fileUrl, category, siteId: site.id }
         })
 
         return NextResponse.json(download)

@@ -2,6 +2,8 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
+import { getSiteData } from "@/lib/sites"
+
 // GET (Public)
 export async function GET(req: Request) {
     try {
@@ -9,9 +11,15 @@ export async function GET(req: Request) {
         const upcoming = searchParams.get('upcoming') === 'true'
         const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined
 
-        const where = upcoming
-            ? { startDate: { gte: new Date() } }
-            : {}
+        const host = req.headers.get('host') || 'localhost:3000'
+        const site = await getSiteData(host.split(':')[0])
+
+        if (!site) return new NextResponse("Site not found", { status: 404 })
+
+        const where = {
+            siteId: site.id,
+            ...(upcoming ? { startDate: { gte: new Date() } } : {})
+        }
 
         const events = await prisma.event.findMany({
             where,
@@ -39,6 +47,10 @@ export async function POST(req: Request) {
             return new NextResponse("Missing fields", { status: 400 })
         }
 
+        const host = req.headers.get('host') || 'localhost:3000'
+        const site = await getSiteData(host.split(':')[0])
+        if (!site) return new NextResponse("Site not found", { status: 404 })
+
         const event = await prisma.event.create({
             data: {
                 title,
@@ -48,7 +60,8 @@ export async function POST(req: Request) {
                 endDate: endDate ? new Date(endDate) : null,
                 location,
                 category,
-                image
+                image,
+                siteId: site.id
             }
         })
 

@@ -8,8 +8,18 @@ import { StaffTable } from "@/components/admin/staff-table"
 export const dynamic = 'force-dynamic'
 
 
+import { headers } from "next/headers"
+import { getSiteData } from "@/lib/sites"
+
 export default async function StaffManagement() {
+    const headersList = await headers()
+    const host = headersList.get("host") || "localhost:3000"
+    const site = await getSiteData(host)
+
+    if (!site) return <div>Site not found</div>
+
     const staff = await prisma.staff.findMany({
+        where: { siteId: site.id },
         orderBy: { updatedAt: 'desc' }
     })
 

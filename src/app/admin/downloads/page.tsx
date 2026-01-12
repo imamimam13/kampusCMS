@@ -6,8 +6,18 @@ import { DeleteButton } from "@/components/admin/delete-button"
 
 export const dynamic = 'force-dynamic'
 
+import { headers } from "next/headers"
+import { getSiteData } from "@/lib/sites"
+
 export default async function DownloadAdminPage() {
+    const headersList = await headers()
+    const host = headersList.get("host") || "localhost:3000"
+    const site = await getSiteData(host)
+
+    if (!site) return <div>Site not found</div>
+
     const downloads = await prisma.download.findMany({
+        where: { siteId: site.id },
         orderBy: { createdAt: 'desc' }
     })
 

@@ -2,14 +2,25 @@ import { prisma } from "@/lib/prisma"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Calendar, User } from "lucide-react"
+import { getSiteData } from "@/lib/sites"
+import { notFound } from "next/navigation"
 
 export const dynamic = 'force-dynamic'
 
-export default async function NewsIndexPage() {
+export default async function NewsIndexPage({ params }: { params: { site: string } }) {
+    const { site: domain } = await params
+    const siteData = await getSiteData(domain)
+
+    if (!siteData) return notFound()
+
     const posts = await prisma.post.findMany({
-        where: { published: true },
+        where: {
+            published: true,
+            siteId: siteData.id
+        },
         orderBy: { createdAt: 'desc' }
     })
+
 
     return (
         <div className="container py-12 mx-auto">
