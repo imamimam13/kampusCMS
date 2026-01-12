@@ -1,5 +1,4 @@
 
-import { auth } from "@/auth"
 import { NextResponse, NextRequest } from "next/server"
 
 export default function middleware(req: NextRequest) {
