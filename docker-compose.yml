@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+services:
   kampuscms:
     # image: imamwb/kampuscms:latest # Commented out to force local build
     build: .
