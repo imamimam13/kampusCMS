@@ -17,19 +17,15 @@ export async function POST(req: Request) {
             return new NextResponse("Missing fields", { status: 400 })
         }
 
-        // Determine domain from headers
-        const host = req.headers.get("host") || "localhost"
-        const subdomain = host.split('.')[0] === "www" ? host.split('.')[1] : host.split('.')[0]
-
         // Start Transaction: Create Site -> Create User -> Link
         await prisma.$transaction(async (tx) => {
-            // 1. Create Default Site
+            // 1. Create Default Site (ALWAYS use 'main' for the root site)
             const site = await tx.site.create({
                 data: {
                     name: "KampusCMS",
                     description: "Welcome to your new campus portal",
-                    subdomain: subdomain, // e.g. "uwb" or "localhost"
-                    customDomain: host,   // e.g. "uwb.ac.id"
+                    subdomain: "main", // Reserved for root site
+                    customDomain: null, // Let logic handle root domain mapping
                     colors: { primary: '#0f172a', secondary: '#64748b' },
                 }
             })

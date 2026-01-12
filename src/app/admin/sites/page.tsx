@@ -109,7 +109,7 @@ export default async function SitesPage() {
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
                                             <Button variant="ghost" size="icon" asChild>
-                                                <a href={`http://${site.subdomain}.localhost:3000`} target="_blank" rel="noopener noreferrer">
+                                                <a href={`http://${site.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'localhost:3000'}`} target="_blank" rel="noopener noreferrer">
                                                     <ExternalLink className="h-4 w-4" />
                                                 </a>
                                             </Button>
