@@ -92,15 +92,22 @@ export function SettingsForm() {
     const onSubmit = async () => {
         setSaving(true)
         try {
-            await fetch('/api/settings', {
+            const res = await fetch('/api/settings', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             })
+
+            if (!res.ok) {
+                const err = await res.text()
+                throw new Error(err || "Failed to update settings")
+            }
+
             router.refresh()
             alert("Settings saved successfully!")
-        } catch (error) {
-            alert("Failed to save settings")
+        } catch (error: any) {
+            console.error(error)
+            alert(`Failed to save settings: ${error.message}`)
         } finally {
             setSaving(false)
         }
