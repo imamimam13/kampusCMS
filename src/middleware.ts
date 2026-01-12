@@ -13,6 +13,8 @@ export default auth((req) => {
     // Pathname excluding search params
     const path = `${url.pathname}${searchParams.length > 0 ? `?${searchParams}` : ""}`
 
+    console.log(`[Middleware] ${req.method} ${url.pathname} (Host: ${hostname})`)
+
     // List of blocked user agents (partial matches)
     const blockedAgents = [
         "puppeteer", "cheerio", "headlesschrome", "selenium", "playwright", "postman", "wget"
@@ -31,10 +33,12 @@ export default auth((req) => {
         url.pathname.startsWith("/_next") ||
         url.pathname.includes(".") // static files
     ) {
+        console.log(`[Middleware] Skipping rewrite for: ${url.pathname}`)
         return NextResponse.next()
     }
 
     // Rewrite logic
+    console.log(`[Middleware] Rewriting to: /_sites/${hostname}${path}`)
     return NextResponse.rewrite(new URL(`/_sites/${hostname}${path}`, req.url))
 })
 
