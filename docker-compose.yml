@@ -8,9 +8,9 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:password@db:5432/kampuscms
       - NEXTAUTH_SECRET=changeme_in_production
-      - NEXTAUTH_URL=http://localhost:8080
+      - NEXTAUTH_URL=http://localhost:8097
       - AUTH_TRUST_HOST=true
-      - NEXT_PUBLIC_ROOT_DOMAIN=localhost:8080
+      - NEXT_PUBLIC_ROOT_DOMAIN=localhost:8097
     volumes:
       - uploads_data:/app/public/uploads
     labels:
@@ -37,7 +37,7 @@ services:
     container_name: kampuscms_nginx
     restart: always
     ports:
-      - "8080:80"
+      - "8097:80"
     depends_on:
       - kampuscms
     volumes:
