@@ -11,13 +11,6 @@ services:
       - NEXTAUTH_URL=http://localhost:8080
       - AUTH_TRUST_HOST=true
       - NEXT_PUBLIC_ROOT_DOMAIN=localhost:8080
-    networks:
-      - kampuscms_internal
-      - kampuscms_public
-    labels:
-      - "com.centurylinklabs.watchtower.scope=kampuscms-scope"
-    depends_on:
-      - db
     volumes:
       - uploads_data:/app/public/uploads
 
@@ -31,8 +24,6 @@ services:
       - POSTGRES_DB=kampuscms
     volumes:
       - db_data:/var/lib/postgresql/data
-    networks:
-      - kampuscms_internal
     # No ports exposed to host to prevent conflict with other Postgres instances
 
   nginx:
@@ -45,9 +36,6 @@ services:
       - kampuscms
     volumes:
       - uploads_data:/usr/share/nginx/html/uploads
-    networks:
-      - kampuscms_internal
-      - kampuscms_public
     labels:
       - "com.centurylinklabs.watchtower.scope=kampuscms-scope"
 
@@ -57,18 +45,10 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 600 --cleanup --scope kampuscms-scope
+    command: ["--interval", "600", "--cleanup", "--scope", "kampuscms-scope"]
     environment:
       - WATCHTOWER_SCOPE=kampuscms-scope
-    networks:
-      - kampuscms_public
 
 volumes:
   db_data:
   uploads_data:
-
-networks:
-  kampuscms_internal:
-    internal: true
-  kampuscms_public:
-    driver: bridge
