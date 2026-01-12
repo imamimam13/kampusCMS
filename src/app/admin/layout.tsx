@@ -1,11 +1,19 @@
 import { AdminSidebar } from "@/components/admin/sidebar"
 import { AdminHeader } from "@/components/admin/header"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
 
-export default function AdminLayout({
+export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const session = await auth()
+
+    if (!session) {
+        redirect("/login")
+    }
+
     return (
         <div className="grid min-h-screen w-full lg:grid-cols-[256px_1fr]">
             <div className="hidden border-r bg-muted/40 md:block lg:block">
