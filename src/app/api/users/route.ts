@@ -2,7 +2,7 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { NextResponse } from "next/server"
-import { hash } from "bcrypt"
+import { hash } from "bcryptjs"
 
 export async function GET(req: Request) {
     const session = await auth()
