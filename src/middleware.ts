@@ -1,8 +1,8 @@
 
 import { auth } from "@/auth"
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 
-export default auth((req) => {
+export default function middleware(req: NextRequest) {
     const url = req.nextUrl
     let hostname = req.headers.get("host") || ""
 
@@ -40,7 +40,7 @@ export default auth((req) => {
     // Rewrite logic
     console.log(`[Middleware] Rewriting to: /_sites/${hostname}${path}`)
     return NextResponse.rewrite(new URL(`/_sites/${hostname}${path}`, req.url))
-})
+}
 
 export const config = {
     matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
