@@ -27,6 +27,7 @@ export default auth((req) => {
         url.pathname.startsWith("/api") ||
         url.pathname.startsWith("/admin") ||
         url.pathname.startsWith("/login") ||
+        url.pathname.startsWith("/setup") ||
         url.pathname.startsWith("/_next") ||
         url.pathname.includes(".") // static files
     ) {
