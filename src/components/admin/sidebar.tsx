@@ -63,8 +63,8 @@ export function AdminSidebar({ className, setOpen }: { className?: string, setOp
         if (!roleMatch) return false
 
         // Then check enabledItems (if configured)
-        // Always show Dashboard, Settings, Manage Sites, Backup for safety
-        const safeItems = ["Dashboard", "Settings", "Manage Sites", "Backup & Restore"]
+        // Always show Dashboard, Settings, Manage Sites, Backup, Pages for safety
+        const safeItems = ["Dashboard", "Settings", "Manage Sites", "Backup & Restore", "Pages"]
         if (safeItems.includes(item.label)) return true
 
         if (enabledItems && !enabledItems.includes(item.label)) {
