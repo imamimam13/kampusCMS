@@ -126,6 +126,7 @@ export function SettingsForm() {
                     <TabsTrigger value="footer">Footer</TabsTrigger>
                     <TabsTrigger value="builder">Builder</TabsTrigger>
                     <TabsTrigger value="scripts">Scripts</TabsTrigger>
+                    <TabsTrigger value="ai">AI</TabsTrigger>
                 </TabsList>
 
                 {/* General Settings */}
@@ -412,6 +413,66 @@ export function SettingsForm() {
                                     onChange={(e) => handleChange('bodyCode', e.target.value)}
                                 />
                                 <p className="text-xs text-muted-foreground">Output just before the closing &lt;/body&gt; tag.</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* AI Settings */}
+                <TabsContent value="ai" className="space-y-4 pt-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Artificial Intelligence</CardTitle>
+                            <CardDescription>Configure AI providers for content generation features.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="space-y-2">
+                                <Label>AI Provider</Label>
+                                <select
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    value={formData.aiConfig?.provider || 'gemini'}
+                                    onChange={(e) => handleNestedChange('aiConfig', 'provider', e.target.value)}
+                                >
+                                    <option value="gemini">Google Gemini</option>
+                                    <option value="openai">OpenAI (ChatGPT)</option>
+                                </select>
+                            </div>
+
+                            {formData.aiConfig?.provider === 'gemini' && (
+                                <div className="space-y-2">
+                                    <Label>Gemini API Key</Label>
+                                    <Input
+                                        type="password"
+                                        value={formData.aiConfig?.geminiKey || ''}
+                                        onChange={(e) => handleNestedChange('aiConfig', 'geminiKey', e.target.value)}
+                                        placeholder="AIza..."
+                                    />
+                                    <p className="text-xs text-muted-foreground">Required for Gemini-powered features.</p>
+                                </div>
+                            )}
+
+                            {formData.aiConfig?.provider === 'openai' && (
+                                <div className="space-y-2">
+                                    <Label>OpenAI API Key</Label>
+                                    <Input
+                                        type="password"
+                                        value={formData.aiConfig?.openaiKey || ''}
+                                        onChange={(e) => handleNestedChange('aiConfig', 'openaiKey', e.target.value)}
+                                        placeholder="sk-..."
+                                    />
+                                    <p className="text-xs text-muted-foreground">Required for ChatGPT-powered features.</p>
+                                </div>
+                            )}
+
+                            <div className="space-y-2">
+                                <Label>OpenRouter API Key (Optional)</Label>
+                                <Input
+                                    type="password"
+                                    value={formData.aiConfig?.openRouterKey || ''}
+                                    onChange={(e) => handleNestedChange('aiConfig', 'openRouterKey', e.target.value)}
+                                    placeholder="sk-or-..."
+                                />
+                                <p className="text-xs text-muted-foreground">Used for fallback or specific models via OpenRouter.</p>
                             </div>
                         </CardContent>
                     </Card>
