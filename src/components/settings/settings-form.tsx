@@ -119,7 +119,7 @@ export function SettingsForm() {
             </div>
 
             <Tabs defaultValue="general" className="w-full">
-                <TabsList className="grid w-full grid-cols-6 lg:w-[600px]">
+                <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 lg:w-full">
                     <TabsTrigger value="general">General</TabsTrigger>
                     <TabsTrigger value="appearance">Appearance</TabsTrigger>
                     <TabsTrigger value="navigation">Navigation</TabsTrigger>
