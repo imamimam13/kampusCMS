@@ -37,8 +37,8 @@ export default function middleware(req: NextRequest) {
     }
 
     // Rewrite logic
-    console.log(`[Middleware] Rewriting to: /_sites/${hostname}${path}`)
-    return NextResponse.rewrite(new URL(`/_sites/${hostname}${path}`, req.url))
+    console.log(`[Middleware] Rewriting to: /sites/${hostname}${path}`)
+    return NextResponse.rewrite(new URL(`/sites/${hostname}${path}`, req.url))
 }
 
 export const config = {
