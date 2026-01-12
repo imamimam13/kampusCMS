@@ -17,16 +17,35 @@ export async function POST(req: Request) {
             return new NextResponse("Missing fields", { status: 400 })
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10)
+        // Determine domain from headers
+        const host = req.headers.get("host") || "localhost"
+        const subdomain = host.split('.')[0] === "www" ? host.split('.')[1] : host.split('.')[0]
 
-        // Create Admin User
-        await prisma.user.create({
-            data: {
-                name,
-                email,
-                password: hashedPassword,
-                role: "super_admin"
-            }
+        // Start Transaction: Create Site -> Create User -> Link
+        await prisma.$transaction(async (tx) => {
+            // 1. Create Default Site
+            const site = await tx.site.create({
+                data: {
+                    name: "KampusCMS",
+                    description: "Welcome to your new campus portal",
+                    subdomain: subdomain, // e.g. "uwb" or "localhost"
+                    customDomain: host,   // e.g. "uwb.ac.id"
+                    colors: { primary: '#0f172a', secondary: '#64748b' },
+                }
+            })
+
+            const hashedPassword = await bcrypt.hash(password, 10)
+
+            // 2. Create Admin User linked to Site
+            await tx.user.create({
+                data: {
+                    name,
+                    email,
+                    password: hashedPassword,
+                    role: "super_admin",
+                    siteId: site.id
+                }
+            })
         })
 
         return NextResponse.json({ success: true })
