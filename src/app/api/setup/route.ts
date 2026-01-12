@@ -25,7 +25,7 @@ export async function POST(req: Request) {
                 name,
                 email,
                 password: hashedPassword,
-                role: "admin"
+                role: "super_admin"
             }
         })
 
