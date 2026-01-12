@@ -11,7 +11,7 @@ export const maxDuration = 300; // 5 minutes
 
 export async function POST(req: Request) {
     const session = await auth()
-    if (!session || session.user.role !== 'admin') {
+    if (!session || session.user.role !== 'super_admin') {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
