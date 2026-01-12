@@ -8,7 +8,7 @@ services:
     container_name: kampuscms_app
     restart: always
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/kampuscms
+      - DATABASE_URL=postgresql://postgres:imamimam@db:5432/kampuscms
       - NEXTAUTH_SECRET=changeme_in_production
       - NEXTAUTH_URL=http://localhost:8097
       - AUTH_TRUST_HOST=true
@@ -26,7 +26,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=imamimam
       - POSTGRES_DB=kampuscms
     volumes:
       - db_data:/var/lib/postgresql/data
