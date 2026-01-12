@@ -15,6 +15,8 @@ services:
       - uploads_data:/app/public/uploads
     labels:
       - "com.centurylinklabs.watchtower.scope=kampuscms-scope"
+    networks:
+      - kampuscms_network
 
   db:
     image: postgres:15-alpine
@@ -26,6 +28,8 @@ services:
       - POSTGRES_DB=kampuscms
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - kampuscms_network
     # No ports exposed to host to prevent conflict with other Postgres instances
 
   nginx:
@@ -40,6 +44,8 @@ services:
       - uploads_data:/usr/share/nginx/html/uploads
     labels:
       - "com.centurylinklabs.watchtower.scope=kampuscms-scope"
+    networks:
+      - kampuscms_network
 
   watchtower:
     image: containrrr/watchtower
@@ -50,7 +56,13 @@ services:
     command: ["--interval", "600", "--cleanup", "--scope", "kampuscms-scope"]
     environment:
       - WATCHTOWER_SCOPE=kampuscms-scope
+    networks:
+      - kampuscms_network
 
 volumes:
   db_data:
   uploads_data:
+
+networks:
+  kampuscms_network:
+    driver: bridge
