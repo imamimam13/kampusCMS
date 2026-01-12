@@ -31,10 +31,7 @@ export default async function SiteLayout({
     const { site: domain } = await params
     const siteData = await getSiteData(domain)
 
-    console.log(`[SiteLayout] Domain: ${domain}, Found: ${!!siteData}`)
-
     if (!siteData) {
-        console.log(`[SiteLayout] Site Not Found for domain: ${domain}`)
         return notFound()
     }
 
