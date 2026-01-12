@@ -70,7 +70,7 @@ export default async function PagesManagement() {
                                     </TableCell>
                                     <TableCell>{page.updatedAt.toLocaleDateString()}</TableCell>
                                     <TableCell className="text-right space-x-2">
-                                        <PageListActions page={page} />
+                                        <PageListActions page={page} site={site} />
                                     </TableCell>
                                 </TableRow>
                             ))
