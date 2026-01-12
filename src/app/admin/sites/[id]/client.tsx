@@ -156,7 +156,7 @@ export function EditSiteClient({ site }: { site: Site }) {
                         <TabsTrigger value="theme">Theme</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="general">
+                    <TabsContent value="general" forceMount={true} className="data-[state=inactive]:hidden">
                         <Card>
                             <CardHeader>
                                 <CardTitle>General Information</CardTitle>
@@ -190,7 +190,7 @@ export function EditSiteClient({ site }: { site: Site }) {
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="builder">
+                    <TabsContent value="builder" forceMount={true} className="data-[state=inactive]:hidden">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Page Builder Configuration</CardTitle>
@@ -219,7 +219,7 @@ export function EditSiteClient({ site }: { site: Site }) {
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="sidebar">
+                    <TabsContent value="sidebar" forceMount={true} className="data-[state=inactive]:hidden">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Admin Sidebar Configuration</CardTitle>
@@ -244,7 +244,7 @@ export function EditSiteClient({ site }: { site: Site }) {
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="theme">
+                    <TabsContent value="theme" forceMount={true} className="data-[state=inactive]:hidden">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Theme Colors</CardTitle>

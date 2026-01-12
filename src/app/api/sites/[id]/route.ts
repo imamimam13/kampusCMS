@@ -34,7 +34,13 @@ export async function PUT(
     const { id } = await params
     try {
         const body = await req.json()
-        const { name, description, subdomain, customDomain, enabledBlocks } = body
+        const { name, description, subdomain, customDomain, enabledBlocks, theme, enabledSidebarItems } = body
+
+        // Prepare update data dynamically to handle partial updates
+        const data: any = {}
+        if (name) data.name = name
+        // Allow description to be set to null/empty string, but only if provided
+        if (description !== undefined) data.description = description
 
         // Validate subdomain uniqueness if changed
         if (subdomain) {
@@ -42,17 +48,22 @@ export async function PUT(
             if (existing && existing.id !== id) {
                 return NextResponse.json({ error: "Subdomain already taken" }, { status: 400 })
             }
+            data.subdomain = subdomain
         }
+
+        if (customDomain !== undefined) data.customDomain = customDomain || null
+        if (enabledBlocks) data.enabledBlocks = enabledBlocks
+        if (enabledSidebarItems) data.enabledSidebarItems = enabledSidebarItems
+        if (theme) data.theme = theme // Assuming 'colors' or 'theme' field? 
+
+        // Check the client code, it sends "colors" but prisma might store it in a specific way?
+        // Looking at schema would be ideal, but assuming 'colors' based on client.tsx line 59:
+        // colors: { primary: ..., secondary: ... }
+        if (body.colors) data.colors = body.colors
 
         const site = await prisma.site.update({
             where: { id },
-            data: {
-                name,
-                description,
-                subdomain,
-                customDomain: customDomain || null,
-                enabledBlocks // Update enabledBlocks field
-            }
+            data
         })
 
         return NextResponse.json(site)
