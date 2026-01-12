@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   kampuscms:
-    image: imamwb/kampuscms:latest
+    # image: imamwb/kampuscms:latest # Commented out to force local build
+    build: .
     container_name: kampuscms_app
     restart: always
     environment:
