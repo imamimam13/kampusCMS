@@ -10,7 +10,7 @@ chown -R nextjs:nodejs /app/.next
 
 # Run migrations (as nextjs user)
 echo "Runnning database migrations..."
-su-exec nextjs npx prisma@6 db push
+su-exec nextjs npx prisma@6 migrate deploy
 
 # Start the application (as nextjs user)
 echo "Starting application..."

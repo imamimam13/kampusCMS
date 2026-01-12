@@ -10,6 +10,7 @@ services:
       - NEXTAUTH_SECRET=changeme_in_production
       - NEXTAUTH_URL=http://localhost:8080
       - AUTH_TRUST_HOST=true
+      - NEXT_PUBLIC_ROOT_DOMAIN=localhost:8080
     networks:
       - kampuscms_internal
       - kampuscms_public
