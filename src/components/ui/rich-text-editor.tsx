@@ -3,8 +3,14 @@
 import { useEffect } from "react"
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import TextAlign from '@tiptap/extension-text-align'
+import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
 import { Button } from '@/components/ui/button'
-import { Bold, Italic, List, ListOrdered, Quote, Redo, Strikethrough, Undo } from 'lucide-react'
+import {
+    Bold, Italic, List, ListOrdered, Quote, Redo, Strikethrough, Undo,
+    AlignLeft, AlignCenter, AlignRight, AlignJustify, Link as LinkIcon, Image as ImageIcon
+} from 'lucide-react'
 
 interface RichTextEditorProps {
     value: string
@@ -13,7 +19,23 @@ interface RichTextEditorProps {
 
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: [
+            StarterKit,
+            TextAlign.configure({
+                types: ['heading', 'paragraph'],
+            }),
+            Link.configure({
+                openOnClick: false,
+                HTMLAttributes: {
+                    class: 'text-blue-500 underline',
+                },
+            }),
+            Image.configure({
+                HTMLAttributes: {
+                    class: 'max-w-full h-auto rounded-lg border',
+                },
+            }),
+        ],
         content: value,
         immediatelyRender: false,
         editorProps: {
@@ -68,6 +90,48 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                 >
                     <Strikethrough className="h-4 w-4" />
                 </Button>
+
+                <div className="border-l mx-1" />
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().setTextAlign('left').run()}
+                    className={editor.isActive({ textAlign: 'left' }) ? 'bg-muted' : ''}
+                    title="Align Left"
+                >
+                    <AlignLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().setTextAlign('center').run()}
+                    className={editor.isActive({ textAlign: 'center' }) ? 'bg-muted' : ''}
+                    title="Align Center"
+                >
+                    <AlignCenter className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().setTextAlign('right').run()}
+                    className={editor.isActive({ textAlign: 'right' }) ? 'bg-muted' : ''}
+                    title="Align Right"
+                >
+                    <AlignRight className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+                    className={editor.isActive({ textAlign: 'justify' }) ? 'bg-muted' : ''}
+                    title="Align Justify"
+                >
+                    <AlignJustify className="h-4 w-4" />
+                </Button>
+
+                <div className="border-l mx-1" />
+
                 <Button
                     variant="ghost"
                     size="icon"
@@ -95,7 +159,43 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                 >
                     <Quote className="h-4 w-4" />
                 </Button>
+
                 <div className="border-l mx-1" />
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                        const previousUrl = editor.getAttributes('link').href
+                        const url = window.prompt('URL', previousUrl)
+                        if (url === null) return
+                        if (url === '') {
+                            editor.chain().focus().extendMarkRange('link').unsetLink().run()
+                            return
+                        }
+                        editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+                    }}
+                    className={editor.isActive('link') ? 'bg-muted' : ''}
+                    title="Link"
+                >
+                    <LinkIcon className="h-4 w-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                        const url = window.prompt('Image URL')
+                        if (url) {
+                            editor.chain().focus().setImage({ src: url }).run()
+                        }
+                    }}
+                    title="Insert Image"
+                >
+                    <ImageIcon className="h-4 w-4" />
+                </Button>
+
+                <div className="border-l mx-1" />
+
                 <Button
                     variant="ghost"
                     size="icon"
