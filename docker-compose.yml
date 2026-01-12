@@ -13,6 +13,8 @@ services:
       - NEXT_PUBLIC_ROOT_DOMAIN=localhost:8080
     volumes:
       - uploads_data:/app/public/uploads
+    labels:
+      - "com.centurylinklabs.watchtower.scope=kampuscms-scope"
 
   db:
     image: postgres:15-alpine
