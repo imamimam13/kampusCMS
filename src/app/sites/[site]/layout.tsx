@@ -42,22 +42,20 @@ export default async function SiteLayout({
 
     return (
         <>
-            <head>
-                {siteData.headCode && (
-                    <div dangerouslySetInnerHTML={{ __html: siteData.headCode }} />
-                )}
-                <style>{`
-            :root {
-              --primary: ${colors.primary};
-              --secondary: ${colors.secondary};
-            }
-          `}</style>
-            </head>
+            {siteData?.headCode && (
+                <div dangerouslySetInnerHTML={{ __html: siteData.headCode }} />
+            )}
+            <style>{`
+                :root {
+                  --primary: ${colors.primary};
+                  --secondary: ${colors.secondary};
+                }
+            `}</style>
             <PublicLayoutWrapper settings={siteData}>
                 {children}
             </PublicLayoutWrapper>
 
-            {siteData.bodyCode && (
+            {siteData?.bodyCode && (
                 <div dangerouslySetInnerHTML={{ __html: siteData.bodyCode }} />
             )}
         </>
