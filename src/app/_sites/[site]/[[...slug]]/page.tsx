@@ -20,6 +20,8 @@ export default async function PublicPage({ params }: { params: { site: string, s
     const slugPath = slug ? slug.join("/") : "/"
     const exactSlug = slug ? slugPath : "/"
 
+    console.log(`[Page] Domain: ${domain}, SiteID: ${siteData.id}, Slug: ${JSON.stringify(slug)}, Exact: ${exactSlug}`)
+
     const page = await prisma.page.findFirst({
         where: {
             siteId: siteData.id,
