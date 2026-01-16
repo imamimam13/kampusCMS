@@ -20,13 +20,31 @@ while ((match = copyRegex.exec(content)) !== null) {
         const row: Record<string, any> = {};
 
         columns.forEach((col, index) => {
-            let val = values[index];
+            let val: any = values[index];
+
+            // Unescape Postgres COPY format
+            // Postgres escapes: \b, \f, \n, \r, \t, \v, \\
             if (val === '\\N') {
                 val = null;
             } else {
+                val = val.replace(/\\([bfnrtv\\])/g, (match: string, char: string) => {
+                    switch (char) {
+                        case 'b': return '\b';
+                        case 'f': return '\f';
+                        case 'n': return ' '; // Replace newline with space for safety in JSON? No, restore literal \n
+                        // Wait, if JSON buffer line has \n, it is real newline.
+                        case 'n': return '\n';
+                        case 'r': return '\r';
+                        case 't': return '\t';
+                        case 'v': return '\v';
+                        case '\\': return '\\';
+                            return char;
+                    }
+                });
+
                 // Try to parse JSON
                 try {
-                    if (val.startsWith('{') || val.startsWith('[')) {
+                    if (val && (val.startsWith('{') || val.startsWith('['))) {
                         val = JSON.parse(val);
                     }
                 } catch (e) {

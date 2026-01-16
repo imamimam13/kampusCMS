@@ -291,7 +291,145 @@
       "id": "cmk29qgne0001450147777oje",
       "title": "New Page",
       "slug": "/",
-      "content": "[{\"id\": \"5429afa4-d799-4874-9530-14affa7e326b\", \"type\": \"hero\", \"content\": {\"title\": \"UNIVERSITAS WIRA BHAKTI\", \"ctaLink\": \"#\", \"ctaText\": \"DAFTAR \", \"subtitle\": \"KEUNGGULAN DALAM PENDIDIKAN\", \"backgroundColor\": \"#001747\", \"backgroundImage\": \"/uploads/1767765751635-38179634-Untitled-1.jpg?v=1767765751640\"}}, {\"id\": \"846cc2f9-ae07-4941-8adc-0a469a3cc5e1\", \"type\": \"text\", \"content\": {\"html\": \"<ul><li><p style=\\\\\"text-align: justify;\\\\\"><strong>Universitas Wira Bhakti adalah tempat lahirnya generasi berkarakter, berilmu, dan berdaya saing. Dengan semangat pengabdian dan integritas, Universitas Wira Bhakti berkomitmen mencetak lulusan yang siap berkontribusi nyata bagi masyarakat, bangsa, dan negara.</strong></p></li><li><p></p></li><li><p></p></li></ul><p></p>\", \"styles\": {\"color\": \"#02277e\", \"fontSize\": \"17px\", \"fontFamily\": \"monospace\"}}}, {\"id\": \"e54c96a2-cbb6-4cba-b416-b143c42b83bb\", \"type\": \"columns\", \"content\": {\"count\": 2, \"columns\": [{\"html\": \"<p></p>\"}, {\"html\": \"<p></p>\"}, {\"html\": \"<p>Column 3 content...</p>\"}]}}, {\"id\": \"cbc115ca-da49-4cfd-8811-c8346e50bada\", \"type\": \"cards\", \"content\": {\"items\": [{\"link\": \"https://uwb.ac.id/feb\", \"image\": \"/uploads/1767765810100-987425414-PICTU.jpg?v=1767765810104\", \"title\": \"FAKULTAS EKONOMI & BISNIS\", \"description\": \"\"}, {\"link\": \"https://uwb.ac.id/saintek\", \"image\": \"/uploads/1767765852461-946814183-SAINTEK.jpg?v=1767765852467\", \"title\": \"FAKULTAS SAINS & TEKNOLOGI\", \"description\": \"\"}, {\"link\": \"https://uwb.ac.id/pasca\", \"image\": \"/uploads/1767765905204-244425081-PASCA.jpg?v=1767765905210\", \"title\": \"PROGRAM PASCASARJANA\", \"description\": \"\"}, {\"link\": \"https://uwb.ac.id/RPL\", \"image\": \"/uploads/1768049116305-620319269-Untitled-1.jpg?v=1768049116314\", \"title\": \"RPL\", \"description\": \"Rekognisi Pembelajaran Lampau\"}], \"title\": \"PROGRAM PENDIDIKAN UNIVERSITAS WIRA BHAKTI\", \"columns\": 4}}, {\"id\": \"ad4ba954-c165-4c6c-a91a-e0b342c33ac9\", \"type\": \"features\", \"content\": {\"items\": [{\"title\": \"BEM FAKULTAS\", \"description\": \"Learn from the best.\"}, {\"title\": \"UKM GRADASI\", \"description\": \"State of the art labs.\"}, {\"title\": \"UKM LITERASI\", \"description\": \"Connect with the world.\"}, {\"title\": \"HMJM\", \"description\": \"HIMPUNAN MAHASISWA JURUSAN MANAJEMEN\"}, {\"title\": \"HMJA\", \"description\": \"HIMPUNAN MAHASISWA JURUSAN AKUNTANSI\"}], \"title\": \"LEMBAGA ORGANISASI INTERNAL\", \"subtitle\": \"\"}}, {\"id\": \"52b72e0a-aa6e-4e31-8c60-21821d0a6e5d\", \"type\": \"gallery\", \"content\": {\"count\": 3, \"title\": \"Campus Gallery\", \"subtitle\": \"Latest photos\"}}, {\"id\": \"35626208-d21e-4b6c-bcfe-f9d441a56915\", \"type\": \"contact\", \"content\": {\"email\": \"contact@wirabhaktimakassar.ac.id\", \"phone\": \"+62 81779544002\", \"title\": \"Contact \", \"mapUrl\": \"https://maps.app.goo.gl/FeyVeXbjLdirACp18\", \"address\": \"<p>JL.AP Pettarani No.72 Makassar</p>\"}}, {\"id\": \"0cc734e9-bd71-4929-8ce7-e1937d1ca688\", \"type\": \"social\", \"content\": {\"url\": \"https://www.instagram.com/wirabhaktimakassar/?hl=id\", \"code\": \"\", \"mode\": \"url\", \"title\": \"Follow instagram\", \"platform\": \"instagram\"}}]",
+      "content": [
+        {
+          "id": "5429afa4-d799-4874-9530-14affa7e326b",
+          "type": "hero",
+          "content": {
+            "title": "UNIVERSITAS WIRA BHAKTI",
+            "ctaLink": "#",
+            "ctaText": "DAFTAR ",
+            "subtitle": "KEUNGGULAN DALAM PENDIDIKAN",
+            "backgroundColor": "#001747",
+            "backgroundImage": "/uploads/1767765751635-38179634-Untitled-1.jpg?v=1767765751640"
+          }
+        },
+        {
+          "id": "846cc2f9-ae07-4941-8adc-0a469a3cc5e1",
+          "type": "text",
+          "content": {
+            "html": "<ul><li><p style=\"text-align: justify;\"><strong>Universitas Wira Bhakti adalah tempat lahirnya generasi berkarakter, berilmu, dan berdaya saing. Dengan semangat pengabdian dan integritas, Universitas Wira Bhakti berkomitmen mencetak lulusan yang siap berkontribusi nyata bagi masyarakat, bangsa, dan negara.</strong></p></li><li><p></p></li><li><p></p></li></ul><p></p>",
+            "styles": {
+              "color": "#02277e",
+              "fontSize": "17px",
+              "fontFamily": "monospace"
+            }
+          }
+        },
+        {
+          "id": "e54c96a2-cbb6-4cba-b416-b143c42b83bb",
+          "type": "columns",
+          "content": {
+            "count": 2,
+            "columns": [
+              {
+                "html": "<p></p>"
+              },
+              {
+                "html": "<p></p>"
+              },
+              {
+                "html": "<p>Column 3 content...</p>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cbc115ca-da49-4cfd-8811-c8346e50bada",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "https://uwb.ac.id/feb",
+                "image": "/uploads/1767765810100-987425414-PICTU.jpg?v=1767765810104",
+                "title": "FAKULTAS EKONOMI & BISNIS",
+                "description": ""
+              },
+              {
+                "link": "https://uwb.ac.id/saintek",
+                "image": "/uploads/1767765852461-946814183-SAINTEK.jpg?v=1767765852467",
+                "title": "FAKULTAS SAINS & TEKNOLOGI",
+                "description": ""
+              },
+              {
+                "link": "https://uwb.ac.id/pasca",
+                "image": "/uploads/1767765905204-244425081-PASCA.jpg?v=1767765905210",
+                "title": "PROGRAM PASCASARJANA",
+                "description": ""
+              },
+              {
+                "link": "https://uwb.ac.id/RPL",
+                "image": "/uploads/1768049116305-620319269-Untitled-1.jpg?v=1768049116314",
+                "title": "RPL",
+                "description": "Rekognisi Pembelajaran Lampau"
+              }
+            ],
+            "title": "PROGRAM PENDIDIKAN UNIVERSITAS WIRA BHAKTI",
+            "columns": 4
+          }
+        },
+        {
+          "id": "ad4ba954-c165-4c6c-a91a-e0b342c33ac9",
+          "type": "features",
+          "content": {
+            "items": [
+              {
+                "title": "BEM FAKULTAS",
+                "description": "Learn from the best."
+              },
+              {
+                "title": "UKM GRADASI",
+                "description": "State of the art labs."
+              },
+              {
+                "title": "UKM LITERASI",
+                "description": "Connect with the world."
+              },
+              {
+                "title": "HMJM",
+                "description": "HIMPUNAN MAHASISWA JURUSAN MANAJEMEN"
+              },
+              {
+                "title": "HMJA",
+                "description": "HIMPUNAN MAHASISWA JURUSAN AKUNTANSI"
+              }
+            ],
+            "title": "LEMBAGA ORGANISASI INTERNAL",
+            "subtitle": ""
+          }
+        },
+        {
+          "id": "52b72e0a-aa6e-4e31-8c60-21821d0a6e5d",
+          "type": "gallery",
+          "content": {
+            "count": 3,
+            "title": "Campus Gallery",
+            "subtitle": "Latest photos"
+          }
+        },
+        {
+          "id": "35626208-d21e-4b6c-bcfe-f9d441a56915",
+          "type": "contact",
+          "content": {
+            "email": "contact@wirabhaktimakassar.ac.id",
+            "phone": "+62 81779544002",
+            "title": "Contact ",
+            "mapUrl": "https://maps.app.goo.gl/FeyVeXbjLdirACp18",
+            "address": "<p>JL.AP Pettarani No.72 Makassar</p>"
+          }
+        },
+        {
+          "id": "0cc734e9-bd71-4929-8ce7-e1937d1ca688",
+          "type": "social",
+          "content": {
+            "url": "https://www.instagram.com/wirabhaktimakassar/?hl=id",
+            "code": "",
+            "mode": "url",
+            "title": "Follow instagram",
+            "platform": "instagram"
+          }
+        }
+      ],
       "published": true,
       "createdAt": "2026-01-06 07:29:00.361",
       "updatedAt": "2026-01-12 03:04:47.968"
