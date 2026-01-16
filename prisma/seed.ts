@@ -110,6 +110,16 @@ async function main() {
     if (data.User) {
         for (const user of data.User) {
             console.log(`Seeding User: ${user.email}`)
+
+            // Check for conflict
+            const conflictingUser = await prisma.user.findUnique({ where: { email: user.email } })
+            if (conflictingUser && conflictingUser.id !== user.id) {
+                console.log(`Deleting conflicting user ${conflictingUser.id} (${conflictingUser.email}) to allow restore...`)
+                // User deletion might cascade to Staff/Posts depending on schema.
+                // Assuming cascade or we want to wipe it anyway.
+                await prisma.user.delete({ where: { id: conflictingUser.id } })
+            }
+
             await prisma.user.upsert({
                 where: { id: user.id },
                 update: withSite(user),
