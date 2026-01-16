@@ -106,6 +106,9 @@ async function main() {
         return row;
     }
 
+    // Map to track ID changes for Users (Backup ID -> Real ID)
+    const userIdMap: Record<string, string> = {};
+
     // 2. User
     if (data.User) {
         for (const user of data.User) {
@@ -113,11 +116,13 @@ async function main() {
 
             // Check for conflict
             const conflictingUser = await prisma.user.findUnique({ where: { email: user.email } })
+
             if (conflictingUser && conflictingUser.id !== user.id) {
-                console.log(`Deleting conflicting user ${conflictingUser.id} (${conflictingUser.email}) to allow restore...`)
-                // User deletion might cascade to Staff/Posts depending on schema.
-                // Assuming cascade or we want to wipe it anyway.
-                await prisma.user.delete({ where: { id: conflictingUser.id } })
+                console.log(`User email ${user.email} exists! Preserving existing user (Superadmin/Admin) and mapping ID...`)
+                console.log(`Map: ${user.id} -> ${conflictingUser.id}`)
+                userIdMap[user.id] = conflictingUser.id;
+                // SKIP upserting this user to keep the existing one intact
+                continue;
             }
 
             await prisma.user.upsert({
@@ -128,17 +133,38 @@ async function main() {
         }
     }
 
+    // Helper to replace userId or authorId
+    const withMappedUser = (row: any, field: 'userId' | 'authorId') => {
+        const oldId = row[field];
+        if (oldId && userIdMap[oldId]) {
+            return { ...row, [field]: userIdMap[oldId] };
+        }
+        return row;
+    }
+
     // 3. Staff
     if (data.Staff) {
         for (const staff of data.Staff) {
             console.log(`Seeding Staff: ${staff.name}`)
             try {
-                // If staff has userId, ensure it fits schema (User must exist)
-                // We trust the dump order or existing users
+                // Apply User ID mapping
+                const staffData = withSite(withMappedUser(staff, 'userId'));
+
+                // Handle Unique Constraint on userId
+                // If the mapped user ALREADY has a staff profile (different ID), we must delete it 
+                // to allow this backup staff profile to take its place (and preserve its ID for relations).
+                if (staffData.userId) {
+                    const existingStaff = await prisma.staff.findUnique({ where: { userId: staffData.userId } })
+                    if (existingStaff && existingStaff.id !== staffData.id) {
+                        console.log(`Deleting existing staff profile ${existingStaff.id} for user ${staffData.userId} to allow restore...`)
+                        await prisma.staff.delete({ where: { id: existingStaff.id } })
+                    }
+                }
+
                 await prisma.staff.upsert({
                     where: { id: staff.id },
-                    update: withSite(staff),
-                    create: withSite(staff)
+                    update: staffData,
+                    create: staffData
                 })
             } catch (e: any) { console.error(`Failed to seed staff ${staff.name}`, e.message) }
         }
@@ -165,7 +191,7 @@ async function main() {
             if (!post.slug) continue; // skip empty
             console.log(`Seeding Post: ${post.slug}`)
             try {
-                const postData = withSite(post);
+                const postData = withSite(withMappedUser(post, 'authorId'));
                 await prisma.post.upsert({
                     where: { id: post.id },
                     update: postData,
