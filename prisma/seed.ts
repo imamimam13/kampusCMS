@@ -1,52 +1,171 @@
 
 import { PrismaClient } from '@prisma/client'
-import { hash } from 'bcryptjs'
+import fs from 'fs'
+import path from 'path'
 
 const prisma = new PrismaClient()
 
 async function main() {
-    console.log('Start seeding ...')
+    console.log('Start seeding from backup ...')
 
-    // 1. Create Default Main Site
-    const mainSite = await prisma.site.upsert({
-        where: { subdomain: 'main' },
-        update: {},
-        create: {
-            name: 'Kampus CMS Platform',
-            description: 'Main Campus Portal',
-            subdomain: 'main', // "main" is reserved for the root domain or main dashboard
-            customDomain: null,
-            colors: { primary: '#0f172a', secondary: '#64748b' },
-        },
-    })
-    console.log(`Created site: ${mainSite.name} (${mainSite.id})`)
+    const seedDataPath = path.join(process.cwd(), 'prisma', 'seed_data.json')
+    if (!fs.existsSync(seedDataPath)) {
+        console.error('Seed data file not found!')
+        return
+    }
 
-    // 2. Create Admin User
-    const password = await hash('admin123', 12)
-    const admin = await prisma.user.upsert({
-        where: { email: 'admin@kampus.id' },
-        update: {},
-        create: {
-            email: 'admin@kampus.id',
-            name: 'Super Admin',
-            password, // Intentionally weak for dev
-            role: 'super_admin',
-        },
-    })
-    console.log(`Created user: ${admin.email} (${admin.id})`)
+    const rawData = JSON.parse(fs.readFileSync(seedDataPath, 'utf-8'))
 
-    // 3. Create a Demo Subdomain Site
-    const bemSite = await prisma.site.upsert({
-        where: { subdomain: 'bem' },
-        update: {},
-        create: {
-            name: 'BEM Universitas',
-            description: 'Website Resmi Badan Eksekutif Mahasiswa',
-            subdomain: 'bem',
-            colors: { primary: '#dc2626', secondary: '#f87171' },
-        },
-    })
-    console.log(`Created site: ${bemSite.name} (${bemSite.id})`)
+    // Helper to fix SQL dates (replace space with T for ISO)
+    const fixDates = (obj: any): any => {
+        if (Array.isArray(obj)) return obj.map(fixDates);
+        if (obj !== null && typeof obj === 'object') {
+            for (const key in obj) {
+                obj[key] = fixDates(obj[key]);
+            }
+            return obj;
+        }
+        if (typeof obj === 'string') {
+            // Match YYYY-MM-DD HH:mm:ss.SSS or similar
+            if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(obj)) {
+                return new Date(obj).toISOString();
+            }
+        }
+        return obj;
+    }
+
+    const data = fixDates(rawData);
+
+    // 1. Ensure Main Site Exists and Get ID
+    let mainSiteId = null;
+    if (data.Site && data.Site.length > 0) {
+        // Assume the first one with subdomain 'main' is the main one
+        const mainSiteData = data.Site.find((s: any) => s.subdomain === 'main') || data.Site[0];
+
+        // Ensure customDomain is set if missing (fixing the original issue)
+        if (!mainSiteData.customDomain) {
+            mainSiteData.customDomain = 'uwb.ac.id';
+        }
+
+        console.log(`Seeding Site: ${mainSiteData.subdomain} (ID: ${mainSiteData.id})`)
+
+        // Check for conflict
+        const conflicting = await prisma.site.findUnique({ where: { subdomain: mainSiteData.subdomain } })
+        if (conflicting && conflicting.id !== mainSiteData.id) {
+            console.log(`Deleting conflicting site ${conflicting.id} to allow restore...`)
+            // We delete explicitly. If cascade is issues, we might need to detach relations first.
+            // Try delete.
+            await prisma.site.delete({ where: { id: conflicting.id } })
+        }
+
+        const site = await prisma.site.upsert({
+            where: { id: mainSiteData.id },
+            update: mainSiteData,
+            create: mainSiteData
+        })
+        mainSiteId = site.id;
+    } else {
+        // Fallback if no site in dump
+        const site = await prisma.site.upsert({
+            where: { subdomain: 'main' },
+            update: {},
+            create: {
+                name: 'Universitas Wira Bhakti',
+                subdomain: 'main',
+                customDomain: 'uwb.ac.id'
+            }
+        })
+        mainSiteId = site.id;
+    }
+
+    // Helper to attach siteId
+    const withSite = (row: any) => {
+        // If row doesn't have siteId, attach mainSiteId
+        if (!row.siteId && mainSiteId) {
+            return { ...row, siteId: mainSiteId };
+        }
+        return row;
+    }
+
+    // 2. User
+    if (data.User) {
+        for (const user of data.User) {
+            console.log(`Seeding User: ${user.email}`)
+            await prisma.user.upsert({
+                where: { id: user.id },
+                update: withSite(user),
+                create: withSite(user)
+            })
+        }
+    }
+
+    // 3. Staff
+    if (data.Staff) {
+        for (const staff of data.Staff) {
+            console.log(`Seeding Staff: ${staff.name}`)
+            try {
+                // If staff has userId, ensure it fits schema (User must exist)
+                // We trust the dump order or existing users
+                await prisma.staff.upsert({
+                    where: { id: staff.id },
+                    update: withSite(staff),
+                    create: withSite(staff)
+                })
+            } catch (e) { console.error(`Failed to seed staff ${staff.name}`, e.message) }
+        }
+    }
+
+    // 4. Page
+    if (data.Page) {
+        for (const page of data.Page) {
+            console.log(`Seeding Page: ${page.slug}`)
+            // Clean explicit nulls that might violate rules if any
+            const pageData = withSite(page);
+
+            await prisma.page.upsert({
+                where: { id: page.id },
+                update: pageData,
+                create: pageData
+            })
+        }
+    }
+
+    // 5. Post
+    if (data.Post) {
+        for (const post of data.Post) {
+            if (!post.slug) continue; // skip empty
+            console.log(`Seeding Post: ${post.slug}`)
+            try {
+                const postData = withSite(post);
+                await prisma.post.upsert({
+                    where: { id: post.id },
+                    update: postData,
+                    create: postData
+                })
+            } catch (e) { console.error(`Failed to seed post ${post.slug}`, e.message) }
+        }
+    }
+
+    // 6. Other tables
+    const tables = ['GalleryAlbum', 'GalleryImage', 'Event', 'Download', 'Testimonial', 'Alert', 'ProgramStudi']
+    for (const table of tables) {
+        if (data[table]) {
+            for (const row of data[table]) {
+                if (!row.id) continue;
+                try {
+                    const rowData = withSite(row);
+                    // @ts-ignore
+                    await prisma[table.charAt(0).toLowerCase() + table.slice(1)].upsert({
+                        where: { id: row.id },
+                        update: rowData,
+                        create: rowData
+                    })
+                } catch (e) {
+                    // console.error(`Failed to seed ${table}`, e.message)
+                }
+            }
+        }
+    }
 
     console.log('Seeding finished.')
 }
@@ -57,6 +176,7 @@ main()
     })
     .catch(async (e) => {
         console.error(e)
+        const prisma = new PrismaClient()
         await prisma.$disconnect()
         process.exit(1)
     })

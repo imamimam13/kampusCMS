@@ -1,0 +1,761 @@
+{
+  "Alert": [
+    {
+      "id": "cmk2l1o6100054501pvph8a2x",
+      "content": "Pendaftaran PENERIMAAN MAHASISWA BARU GELOMBANG PERTAMA DI BUKA",
+      "link": "",
+      "isActive": true,
+      "startDate": "2026-01-06 12:45:39.094",
+      "endDate": null,
+      "createdAt": "2026-01-06 12:45:39.096",
+      "updatedAt": "2026-01-06 12:45:39.096"
+    },
+    {
+      "id": "cmk2l2xg600064501mcirhs94",
+      "content": "Gabung yuk",
+      "link": "",
+      "isActive": true,
+      "startDate": "2026-01-06 12:46:37.779",
+      "endDate": null,
+      "createdAt": "2026-01-06 12:46:37.781",
+      "updatedAt": "2026-01-06 12:46:37.781"
+    },
+    {
+      "id": "cmk4xhz4r000545017j142hot",
+      "content": "Besok Jumat",
+      "link": "",
+      "isActive": true,
+      "startDate": "2026-01-08 04:09:47.544",
+      "endDate": null,
+      "createdAt": "2026-01-08 04:09:47.546",
+      "updatedAt": "2026-01-08 04:09:47.546"
+    }
+  ],
+  "Download": [
+    {
+      "id": "cmk2u8c9k000245013xnaavj8",
+      "title": "sadasda",
+      "fileUrl": "/uploads/1767718963545-560670222-Kwitansi-Registrasi-KRS-20251.pdf",
+      "category": "Akademik",
+      "createdAt": "2026-01-06 17:02:46.808",
+      "updatedAt": "2026-01-06 17:02:46.808"
+    },
+    {
+      "id": "cmk2unbl400024501t1afkiqw",
+      "title": "dsada",
+      "fileUrl": "/uploads/1767719661882-952258747-droidstar_communication_log.jpg",
+      "category": "Akademik",
+      "createdAt": "2026-01-06 17:14:25.767",
+      "updatedAt": "2026-01-06 17:14:25.767"
+    }
+  ],
+  "Event": [
+    {
+      "id": ""
+    }
+  ],
+  "GalleryAlbum": [
+    {
+      "id": "cmk2bg6i800004501juugzuva",
+      "title": "test",
+      "description": "asdadad",
+      "coverImage": "/uploads/1767687415460-970161107-droidstar_home_screen.jpg",
+      "createdAt": "2026-01-06 08:16:59.887",
+      "updatedAt": "2026-01-06 16:20:01.382"
+    },
+    {
+      "id": "cmk9z8n4e00074501x8yee5h9",
+      "title": "KKNT 2026",
+      "description": "pelepasan mahasiswa KKNT dan magang 2026",
+      "coverImage": "",
+      "createdAt": "2026-01-11 16:57:22.13",
+      "updatedAt": "2026-01-11 16:57:49.088"
+    },
+    {
+      "id": "cmk9z9rjs00084501gzkm0bxq",
+      "title": "WISUDA 2025",
+      "description": "wisudawan 2025",
+      "coverImage": "",
+      "createdAt": "2026-01-11 16:58:14.583",
+      "updatedAt": "2026-01-11 16:58:14.583"
+    },
+    {
+      "id": "cmk9zg6mh00094501zd17mlvu",
+      "title": "KEGIATAN MAHASISWA",
+      "description": "",
+      "coverImage": "",
+      "createdAt": "2026-01-11 17:03:14.056",
+      "updatedAt": "2026-01-11 17:03:14.056"
+    }
+  ],
+  "GalleryImage": [
+    {
+      "id": ""
+    }
+  ],
+  "Page": [
+    {
+      "id": "cmk2ai1kc00094501ojlsutpo",
+      "title": "New Page",
+      "slug": "/pasca",
+      "content": [
+        {
+          "id": "e531f671-d50d-44fc-b500-990cc2deb15c",
+          "type": "hero",
+          "content": {
+            "title": "Program Pascasarjana",
+            "ctaLink": "#",
+            "ctaText": "Pasca_MM",
+            "subtitle": "Universitas Wira Bhakti",
+            "backgroundColor": "#072e83",
+            "backgroundImage": "/placeholder.jpg",
+            "secondaryCtaText": "Pasca_MM"
+          }
+        },
+        {
+          "id": "6221d83b-451a-49e4-b6ee-fc759b356967",
+          "type": "prodi-grid",
+          "content": {
+            "count": 1,
+            "title": "Program Sutudi",
+            "description": "Magister(S2)"
+          }
+        },
+        {
+          "id": "7b98b5bc-7ea4-403c-8abc-d4890c4a3733",
+          "type": "gallery",
+          "content": {
+            "count": 3,
+            "title": "Campus Gallery",
+            "subtitle": "Latest photos"
+          }
+        },
+        {
+          "id": "a00b89d1-cc5a-4ae1-a3ac-f98e5fb07c8a",
+          "type": "tracer-stats",
+          "content": {
+            "title": "Alumni Success",
+            "description": "See how our graduates are performing in the professional world."
+          }
+        }
+      ],
+      "published": true,
+      "createdAt": "2026-01-06 07:50:27.181",
+      "updatedAt": "2026-01-08 04:17:14.458"
+    },
+    {
+      "id": "cmk3m05y500004501qtfvsb7p",
+      "title": "New Page",
+      "slug": "/saintek",
+      "content": [
+        {
+          "id": "5429afa4-d799-4874-9530-14affa7e326b",
+          "type": "hero",
+          "content": {
+            "title": "FAKULTAS SAINS & TEKNOLOGI",
+            "ctaLink": "#",
+            "ctaText": "DAFTAR ",
+            "subtitle": "KEUNGGULAN DALAM PENDIDIKAN",
+            "backgroundImage": "/uploads/1767765466945-297887550-SAINTEK.jpg?v=1767765466950"
+          }
+        },
+        {
+          "id": "a18e4b03-f668-4892-995a-c78ea175f3fd",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "#",
+                "image": "",
+                "title": "DEKAN",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "KETUA PRODI ILMU PERIKANAN",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "KETUA PRODI ILMU PERIKANAN",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "KETUA PRODI TEKNIK INDUSTRI",
+                "description": "Description"
+              }
+            ],
+            "title": "",
+            "columns": 4
+          }
+        },
+        {
+          "id": "cbc115ca-da49-4cfd-8811-c8346e50bada",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "",
+                "image": "",
+                "title": "ILMU PERIKANAN",
+                "description": "TERAKREDITASI"
+              },
+              {
+                "link": "",
+                "image": "",
+                "title": "ILMU LINGKUNGAN",
+                "description": "TERAKREDITASI"
+              },
+              {
+                "link": "",
+                "image": "",
+                "title": "TEKNIK INDUSTRI",
+                "description": "AKREDITASI BAIK"
+              }
+            ],
+            "title": "PROGRAM STUDI",
+            "columns": 3
+          }
+        }
+      ],
+      "published": true,
+      "createdAt": "2026-01-07 06:00:14.621",
+      "updatedAt": "2026-01-11 17:33:37.061"
+    },
+    {
+      "id": "cmk2wxfqi00004501cfq9qmom",
+      "title": "test berita",
+      "slug": "/socials",
+      "content": [
+        {
+          "id": "1bf00f7e-99a5-469f-9660-7717ca2f8468",
+          "type": "rss",
+          "content": {
+            "count": 3,
+            "title": "Latest Updates",
+            "layout": "grid",
+            "keyword": "Universitas Wira Bhakti"
+          }
+        },
+        {
+          "id": "f87eb2ec-9d97-4132-a2dd-d5cc90c7a71d",
+          "type": "social",
+          "content": {
+            "url": "https://www.youtube.com/watch?v=ALFQFO40h3I",
+            "mode": "url",
+            "title": "Follow Us",
+            "platform": "youtube"
+          }
+        },
+        {
+          "id": "2ebf80b8-2a5d-4070-8b60-c23522c1e985",
+          "type": "social",
+          "content": {
+            "url": "https://www.tiktok.com/tag/wirabhaktimakassar?lang=fi-FI",
+            "mode": "url",
+            "title": "Follow Us",
+            "platform": "tiktok"
+          }
+        }
+      ],
+      "published": true,
+      "createdAt": "2026-01-06 18:18:16.938",
+      "updatedAt": "2026-01-07 03:25:32.061"
+    },
+    {
+      "id": "cmk8aumdh000645019ed82j8y",
+      "title": "New Page",
+      "slug": "/RPL",
+      "content": [
+        {
+          "id": "c80517ae-362a-43a6-80ba-486dd2ba2b95",
+          "type": "hero",
+          "content": {
+            "title": "Rekognisi Pembelajaran Lampau",
+            "ctaLink": "#",
+            "ctaText": "Learn More",
+            "subtitle": "RPL",
+            "backgroundImage": "/placeholder.jpg"
+          }
+        }
+      ],
+      "published": true,
+      "createdAt": "2026-01-10 12:46:51.076",
+      "updatedAt": "2026-01-10 12:46:51.076"
+    },
+    {
+      "id": "cmk29qgne0001450147777oje",
+      "title": "New Page",
+      "slug": "/",
+      "content": "[{\"id\": \"5429afa4-d799-4874-9530-14affa7e326b\", \"type\": \"hero\", \"content\": {\"title\": \"UNIVERSITAS WIRA BHAKTI\", \"ctaLink\": \"#\", \"ctaText\": \"DAFTAR \", \"subtitle\": \"KEUNGGULAN DALAM PENDIDIKAN\", \"backgroundColor\": \"#001747\", \"backgroundImage\": \"/uploads/1767765751635-38179634-Untitled-1.jpg?v=1767765751640\"}}, {\"id\": \"846cc2f9-ae07-4941-8adc-0a469a3cc5e1\", \"type\": \"text\", \"content\": {\"html\": \"<ul><li><p style=\\\\\"text-align: justify;\\\\\"><strong>Universitas Wira Bhakti adalah tempat lahirnya generasi berkarakter, berilmu, dan berdaya saing. Dengan semangat pengabdian dan integritas, Universitas Wira Bhakti berkomitmen mencetak lulusan yang siap berkontribusi nyata bagi masyarakat, bangsa, dan negara.</strong></p></li><li><p></p></li><li><p></p></li></ul><p></p>\", \"styles\": {\"color\": \"#02277e\", \"fontSize\": \"17px\", \"fontFamily\": \"monospace\"}}}, {\"id\": \"e54c96a2-cbb6-4cba-b416-b143c42b83bb\", \"type\": \"columns\", \"content\": {\"count\": 2, \"columns\": [{\"html\": \"<p></p>\"}, {\"html\": \"<p></p>\"}, {\"html\": \"<p>Column 3 content...</p>\"}]}}, {\"id\": \"cbc115ca-da49-4cfd-8811-c8346e50bada\", \"type\": \"cards\", \"content\": {\"items\": [{\"link\": \"https://uwb.ac.id/feb\", \"image\": \"/uploads/1767765810100-987425414-PICTU.jpg?v=1767765810104\", \"title\": \"FAKULTAS EKONOMI & BISNIS\", \"description\": \"\"}, {\"link\": \"https://uwb.ac.id/saintek\", \"image\": \"/uploads/1767765852461-946814183-SAINTEK.jpg?v=1767765852467\", \"title\": \"FAKULTAS SAINS & TEKNOLOGI\", \"description\": \"\"}, {\"link\": \"https://uwb.ac.id/pasca\", \"image\": \"/uploads/1767765905204-244425081-PASCA.jpg?v=1767765905210\", \"title\": \"PROGRAM PASCASARJANA\", \"description\": \"\"}, {\"link\": \"https://uwb.ac.id/RPL\", \"image\": \"/uploads/1768049116305-620319269-Untitled-1.jpg?v=1768049116314\", \"title\": \"RPL\", \"description\": \"Rekognisi Pembelajaran Lampau\"}], \"title\": \"PROGRAM PENDIDIKAN UNIVERSITAS WIRA BHAKTI\", \"columns\": 4}}, {\"id\": \"ad4ba954-c165-4c6c-a91a-e0b342c33ac9\", \"type\": \"features\", \"content\": {\"items\": [{\"title\": \"BEM FAKULTAS\", \"description\": \"Learn from the best.\"}, {\"title\": \"UKM GRADASI\", \"description\": \"State of the art labs.\"}, {\"title\": \"UKM LITERASI\", \"description\": \"Connect with the world.\"}, {\"title\": \"HMJM\", \"description\": \"HIMPUNAN MAHASISWA JURUSAN MANAJEMEN\"}, {\"title\": \"HMJA\", \"description\": \"HIMPUNAN MAHASISWA JURUSAN AKUNTANSI\"}], \"title\": \"LEMBAGA ORGANISASI INTERNAL\", \"subtitle\": \"\"}}, {\"id\": \"52b72e0a-aa6e-4e31-8c60-21821d0a6e5d\", \"type\": \"gallery\", \"content\": {\"count\": 3, \"title\": \"Campus Gallery\", \"subtitle\": \"Latest photos\"}}, {\"id\": \"35626208-d21e-4b6c-bcfe-f9d441a56915\", \"type\": \"contact\", \"content\": {\"email\": \"contact@wirabhaktimakassar.ac.id\", \"phone\": \"+62 81779544002\", \"title\": \"Contact \", \"mapUrl\": \"https://maps.app.goo.gl/FeyVeXbjLdirACp18\", \"address\": \"<p>JL.AP Pettarani No.72 Makassar</p>\"}}, {\"id\": \"0cc734e9-bd71-4929-8ce7-e1937d1ca688\", \"type\": \"social\", \"content\": {\"url\": \"https://www.instagram.com/wirabhaktimakassar/?hl=id\", \"code\": \"\", \"mode\": \"url\", \"title\": \"Follow instagram\", \"platform\": \"instagram\"}}]",
+      "published": true,
+      "createdAt": "2026-01-06 07:29:00.361",
+      "updatedAt": "2026-01-12 03:04:47.968"
+    },
+    {
+      "id": "cmk3n2v9w00024501dpzlczcj",
+      "title": "New Page",
+      "slug": "/LPPM",
+      "content": [
+        {
+          "id": "ef13d208-57d4-4e06-99c6-56053b76ec44",
+          "type": "hero",
+          "content": {
+            "title": "LEMBAGA PENELITIAN & PENGABDIAN MASYARAKAT",
+            "ctaLink": "#",
+            "ctaText": "Learn More",
+            "subtitle": "LPPM",
+            "backgroundImage": "/placeholder.jpg",
+            "secondaryCtaLink": ""
+          }
+        },
+        {
+          "id": "2661d816-9bd0-4299-8451-2192a08af5bc",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "#",
+                "image": "",
+                "title": "Card 1",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "Card 2",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "Card 3",
+                "description": "Description here"
+              }
+            ],
+            "title": "MAGANG BERSERTIFIKAT",
+            "columns": 3
+          }
+        },
+        {
+          "id": "b16c3106-8c54-4371-8dac-e40a179d4ab3",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 01",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 02",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 03",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 04",
+                "description": "Description"
+              }
+            ],
+            "title": "KKNT  2026",
+            "columns": 4
+          }
+        },
+        {
+          "id": "62887ed4-35f4-4d5e-ac73-47a5ebb12908",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 05",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 06",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 07",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 08",
+                "description": "Description"
+              }
+            ],
+            "title": "",
+            "columns": 4
+          }
+        },
+        {
+          "id": "42f96e4e-ac19-43cc-9b9e-ee75c66cfdec",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 09",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 10",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 11",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "POS 12",
+                "description": "Description"
+              }
+            ],
+            "title": "",
+            "columns": 3
+          }
+        },
+        {
+          "id": "f3013d2c-5a98-4d3a-80da-72a2d53af655",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "#",
+                "image": "",
+                "title": "Card 1",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "Card 2",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "Card 3",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "New Card",
+                "description": "Description"
+              }
+            ],
+            "title": "PENELITIAN  FUNDAMENTAL",
+            "columns": 4
+          }
+        },
+        {
+          "id": "a40d66fa-7999-4626-bf24-1099a536292d",
+          "type": "separator",
+          "content": {
+            "color": "transparent",
+            "height": 20,
+            "showLine": false
+          }
+        },
+        {
+          "id": "50f5f7cf-77e4-4655-8842-fe658d750217",
+          "type": "social",
+          "content": {
+            "url": "https://www.youtube.com/watch?v=ALFQFO40h3I",
+            "mode": "url",
+            "title": "KOSA BANGSA  UWIBHA DI TANAH TORAJA",
+            "platform": "youtube"
+          }
+        },
+        {
+          "id": "50e79561-6c17-4b15-801b-984aa6e61f62",
+          "type": "social",
+          "content": {
+            "url": "https://www.youtube.com/watch?v=kodYK9QS5O0",
+            "mode": "url",
+            "title": "KOSA BANGSA UWIBHA DI PANGKEP",
+            "platform": "youtube"
+          }
+        }
+      ],
+      "published": true,
+      "createdAt": "2026-01-07 06:30:20.372",
+      "updatedAt": "2026-01-07 07:01:22.311"
+    },
+    {
+      "id": "cmk4xb4do00034501gd0jrexb",
+      "title": "New Page",
+      "slug": "press/",
+      "content": [],
+      "published": true,
+      "createdAt": "2026-01-08 04:04:27.756",
+      "updatedAt": "2026-01-08 04:04:27.756"
+    },
+    {
+      "id": "cmk4xbcr0000445010u6qhxn9",
+      "title": "halaman press",
+      "slug": "press",
+      "content": [
+        {
+          "id": "ffb414fd-4e88-4bfa-ac80-5b52fb8ad546",
+          "type": "hero",
+          "content": {
+            "title": "Welcome to Our Campus",
+            "ctaLink": "#",
+            "ctaText": "Learn More",
+            "subtitle": "Excellence in Education",
+            "backgroundImage": "/placeholder.jpg"
+          }
+        },
+        {
+          "id": "3616ac45-ab68-4044-867b-19a5a819f52c",
+          "type": "news-grid",
+          "content": {
+            "count": 3,
+            "title": "Latest News"
+          }
+        }
+      ],
+      "published": true,
+      "createdAt": "2026-01-08 04:04:38.605",
+      "updatedAt": "2026-01-08 04:04:57.071"
+    },
+    {
+      "id": "cmk3ma3zv00014501ydttr6im",
+      "title": "New Page",
+      "slug": "/feb",
+      "content": [
+        {
+          "id": "d7005952-6b56-4411-9750-ad0f76a1303b",
+          "type": "hero",
+          "content": {
+            "title": "FAKULTAS EKONOMI &  BISNIS",
+            "styles": {
+              "fontSize": "14px",
+              "fontFamily": "'Open Sans', sans-serif"
+            },
+            "ctaLink": "",
+            "ctaText": "DAFTAR",
+            "subtitle": "KEUNGGULAN DALAM MOTIVASI",
+            "backgroundImage": "/uploads/1767766076130-556880982-PICTU.jpg?v=1767766076138"
+          }
+        },
+        {
+          "id": "1258de35-0114-4c5c-95a5-906e17d14d9f",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "#",
+                "image": "",
+                "title": "DEKAN",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "KETUA PRODI MANAJEMEN",
+                "description": "Description here"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "KETUA PRODI AKUNTANSI",
+                "description": "Description here"
+              }
+            ],
+            "title": "",
+            "columns": 3
+          }
+        },
+        {
+          "id": "3dd2157f-fee8-4ba9-b0ed-2374e72b6ee8",
+          "type": "cards",
+          "content": {
+            "items": [
+              {
+                "link": "#",
+                "image": "",
+                "title": "MANAJEMEN",
+                "description": "AKREDITASI B"
+              },
+              {
+                "link": "#",
+                "image": "",
+                "title": "AKUNTANSI",
+                "description": "AKREDITASI B"
+              }
+            ],
+            "title": "PROGRAM STUDI",
+            "columns": 2
+          }
+        }
+      ],
+      "published": true,
+      "createdAt": "2026-01-07 06:07:58.651",
+      "updatedAt": "2026-01-12 02:58:08.33"
+    }
+  ],
+  "Post": [
+    {
+      "id": ""
+    }
+  ],
+  "ProgramStudi": [
+    {
+      "id": "cmk2a6irp00074501ny8rummq",
+      "code": "mnjs2",
+      "name": "Manajemen (S2)",
+      "degree": "S2",
+      "vision": "<p>Selalu terbarukan</p>",
+      "mission": "<p>Selalu berhasil</p>",
+      "accreditation": "Baik",
+      "headOfProdiId": "cmk29vu040005450147pn1c88",
+      "curriculum": [
+        {
+          "courses": [
+            {
+              "code": "1231232",
+              "name": "fafafasfaafafasas",
+              "credits": 3
+            }
+          ],
+          "semester": 1
+        }
+      ],
+      "createdAt": "2026-01-06 07:41:29.605",
+      "updatedAt": "2026-01-06 08:21:21.685"
+    }
+  ],
+  "Setting": [
+    {
+      "key": ""
+    }
+  ],
+  "Staff": [
+    {
+      "id": "cmk29vu040005450147pn1c88",
+      "name": "A Imam Zulfikar Mustaman",
+      "slug": "imamimam",
+      "nidn": "0913118702",
+      "role": "Dosen Sangat Luar Biasa",
+      "bio": "paling jago lah",
+      "image": "",
+      "links": [
+        {
+          "url": "",
+          "icon": "gaming",
+          "label": "Main yuk"
+        },
+        {
+          "url": "",
+          "icon": "instagram",
+          "label": "instagram"
+        }
+      ],
+      "pddiktiData": null,
+      "createdAt": "2026-01-06 07:33:10.948",
+      "updatedAt": "2026-01-08 04:14:38.034",
+      "userId": null
+    }
+  ],
+  "Testimonial": [
+    {
+      "id": ""
+    }
+  ],
+  "TracerResponse": [
+    {
+      "id": "cmk2aagtu000845012oge4fot",
+      "nim": "033010121",
+      "nama": "Risal",
+      "kodeProdi": "61101",
+      "tahunLulus": "2025",
+      "nomorHP": "081243932011",
+      "email": "risal@wirabhaktimakassar.ac.id",
+      "status": "Kerja",
+      "bidangKerja": "NGO",
+      "namaPerusahaan": "Universitas Wira BHakti",
+      "jenisInstansi": "",
+      "jabatan": "Kepala PDPT",
+      "waktuTunggu": "0",
+      "gaji": "< 3 Juta",
+      "kesesuaianBidang": "Tidak",
+      "feedback": "Good Job",
+      "createdAt": "2026-01-06 07:44:33.714",
+      "updatedAt": "2026-01-06 07:44:33.714"
+    }
+  ],
+  "User": [
+    {
+      "id": "cmk29ogfo00004501mk0rnd6h",
+      "email": "contact@wirabhaktimakassar.ac.id",
+      "password": "$2b$10$.EV2bAT/InOK5UdW7/jNs.oQVDbgGTDcBDjDnz7TFzrg55B0fx45i",
+      "name": "adminadmin",
+      "role": "admin",
+      "createdAt": "2026-01-06 07:27:26.772",
+      "updatedAt": "2026-01-06 07:27:26.772"
+    }
+  ],
+  "Site": [
+    {
+      "id": "cmk29rkum00024501nd0lxz8x",
+      "name": "Halo dari Uwibha",
+      "description": "Website utama dari Universitas Wira Bhakti",
+      "logo": "/uploads/1767712593954-361667606-LOGO_UWB_baru.png",
+      "colors": {
+        "primary": "#02277e",
+        "secondary": "#3b82f6"
+      },
+      "fonts": {
+        "body": "Inter",
+        "heading": "Inter"
+      },
+      "headerLinks": [],
+      "footerText": "UWIBHA",
+      "headCode": "<meta name=\"google-site-verification\" content=\"83A2w3fPS0kHtA9p3M5oJNeAZFPfhr2gkDl-BoHlUL0\" />\\n<meta name=\"google-adsense-account\" content=\"ca-pub-9845335170263588\">",
+      "bodyCode": null,
+      "pddiktiUrl": "https://api-frontend.kemdikbud.go.id",
+      "aiConfig": {
+        "provider": "gemini",
+        "geminiKey": "",
+        "openaiKey": ""
+      },
+      "updatedAt": "2026-01-11 16:53:33.691",
+      "footerConfig": {
+        "contact": "contact@wirabhaktimakassar.ac.id\\n081779544002",
+        "description": ""
+      },
+      "subdomain": "main"
+    }
+  ]
+}
