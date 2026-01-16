@@ -18,7 +18,7 @@ const streamToBuffer = async (stream: Readable): Promise<Buffer> => {
 
 export async function POST(req: Request) {
     const session = await auth()
-    if (!session || session.user.role !== 'admin') {
+    if (!session || !['admin', 'super_admin'].includes(session.user.role)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -69,11 +69,15 @@ export async function POST(req: Request) {
         console.log(`pg_dump stderr: ${data}`)
     })
 
+    pgDump.on('error', (err) => {
+        console.error("Failed to start pg_dump:", err)
+        archive.append(Buffer.from(`Error starting pg_dump: ${err.message}`), { name: 'backup_error.txt' })
+    })
+
     pgDump.on('exit', (code) => {
         if (code !== 0) {
             console.error(`pg_dump exited with code ${code}`)
-            // We can't really fail the request here since headers are sent, 
-            // but the archive will be incomplete or corrupt, which is handled on restore
+            archive.append(Buffer.from(`pg_dump failed with exit code ${code}`), { name: 'backup_failed.txt' })
         }
     })
 
