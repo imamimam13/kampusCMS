@@ -12,8 +12,8 @@ chown -R nextjs:nodejs /app/.next
 echo "Runnning database migrations..."
 su-exec nextjs npx prisma@6 migrate deploy
 
-echo "Running database seeding..."
-su-exec nextjs npx -y tsx prisma/seed.ts
+# echo "Running database seeding..."
+# su-exec nextjs npx -y tsx prisma/seed.ts
 
 # Start the application (as nextjs user)
 echo "Starting application..."
