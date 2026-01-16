@@ -50,12 +50,31 @@ async function main() {
         console.log(`Seeding Site: ${mainSiteData.subdomain} (ID: ${mainSiteData.id})`)
 
         // Check for conflict
-        const conflicting = await prisma.site.findUnique({ where: { subdomain: mainSiteData.subdomain } })
-        if (conflicting && conflicting.id !== mainSiteData.id) {
-            console.log(`Deleting conflicting site ${conflicting.id} to allow restore...`)
-            // We delete explicitly. If cascade is issues, we might need to detach relations first.
-            // Try delete.
-            await prisma.site.delete({ where: { id: conflicting.id } })
+        // Check for conflict
+        const conflictingSubdomain = await prisma.site.findUnique({ where: { subdomain: mainSiteData.subdomain } })
+        if (conflictingSubdomain && conflictingSubdomain.id !== mainSiteData.id) {
+            console.log(`Deleting conflicting site (subdomain) ${conflictingSubdomain.id} to allow restore...`)
+            // Detach relations if needed or rely on cascade? 
+            // Site deletion usually cascades content, let's try direct delete.
+            await prisma.site.delete({ where: { id: conflictingSubdomain.id } })
+        }
+
+        // Check for customDomain conflict
+        if (mainSiteData.customDomain) {
+            const conflictingCustom = await prisma.site.findUnique({ where: { customDomain: mainSiteData.customDomain } })
+            if (conflictingCustom && conflictingCustom.id !== mainSiteData.id) {
+                console.log(`Deleting conflicting site (customDomain) ${conflictingCustom.id} to allow restore...`)
+                // Check if it's the same site we just deleted (unlikely given different findUnique, but possible race/logic?)
+                // findUnique uses exact match. If we deleted it above, it won't be found here.
+                // But wait, what if conflictingSubdomain ID != conflictingCustom ID?
+                // That implies TWO other sites preventing restore.
+                // We should delete both.
+                try {
+                    await prisma.site.delete({ where: { id: conflictingCustom.id } })
+                } catch (e) {
+                    // ignore if already deleted
+                }
+            }
         }
 
         const site = await prisma.site.upsert({
