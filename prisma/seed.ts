@@ -140,7 +140,7 @@ async function main() {
                     update: withSite(staff),
                     create: withSite(staff)
                 })
-            } catch (e) { console.error(`Failed to seed staff ${staff.name}`, e.message) }
+            } catch (e: any) { console.error(`Failed to seed staff ${staff.name}`, e.message) }
         }
     }
 
@@ -171,7 +171,7 @@ async function main() {
                     update: postData,
                     create: postData
                 })
-            } catch (e) { console.error(`Failed to seed post ${post.slug}`, e.message) }
+            } catch (e: any) { console.error(`Failed to seed post ${post.slug}`, e.message) }
         }
     }
 
