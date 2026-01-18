@@ -54,7 +54,7 @@ export function BuilderSidebar() {
         : availableBlocks
 
     return (
-        <div className="w-64 border-l bg-background p-4 overflow-y-auto h-[calc(100vh-60px)]">
+        <div className="w-64 border-r bg-background p-4 overflow-y-auto h-[calc(100vh-60px)]">
             <h3 className="mb-4 text-sm font-semibold text-muted-foreground">
                 Toolbox
             </h3>

@@ -151,7 +151,8 @@ function DraggableWrapper({ id, children, isSelected, onClick }: { id: string, c
                 isSelected ? "ring-2 ring-blue-500" : "hover:ring-2 hover:ring-blue-500/50"
             )}
         >
-            {/* Drag Handle - Only visible on hover/selected */}
+            {/* Drag Handle - Absolutely positioned OUTSIDE the clipped area effectively, 
+                but since the parent is NOT overflow hidden, it shows. */}
             <div
                 {...attributes}
                 {...listeners}
@@ -164,8 +165,10 @@ function DraggableWrapper({ id, children, isSelected, onClick }: { id: string, c
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.66669 2.66667V13.3333M11.3334 2.66667V13.3333" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </div>
 
-            {/* The actual block content */}
-            {children}
+            {/* Inner Content Wrapper - Clips content that overflows (like Hero images) */}
+            <div className="overflow-hidden rounded-md">
+                {children}
+            </div>
         </div>
     )
 }
