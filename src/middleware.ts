@@ -30,7 +30,8 @@ export default function middleware(req: NextRequest) {
         "/.env",
         "/etc/passwd",
         ".cgi",
-        "/cgi-bin"
+        "/cgi-bin",
+        "/wls-wsat"
     ]
     if (blockedPaths.some(path => url.pathname.includes(path))) {
         return new NextResponse("Forbidden", { status: 403 })
