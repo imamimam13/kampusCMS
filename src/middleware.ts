@@ -28,7 +28,9 @@ export default function middleware(req: NextRequest) {
         "/wp-login.php",
         "/xmlrpc.php",
         "/.env",
-        "/etc/passwd"
+        "/etc/passwd",
+        ".cgi",
+        "/cgi-bin"
     ]
     if (blockedPaths.some(path => url.pathname.includes(path))) {
         return new NextResponse("Forbidden", { status: 403 })
