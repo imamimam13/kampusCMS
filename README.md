@@ -38,7 +38,7 @@
 -   **Pengaturan Situs**: Konfigurasi identitas kampus, SEO, dan kode pelacakan (Analytics) langsung dari dashboard.
 
 ## 🛠️ Teknologi yang Digunakan
-
+1
 -   **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
 -   **Bahasa**: TypeScript
 -   **Database**: PostgreSQL
