@@ -1,56 +1,56 @@
 <div align="center">
-  <img src="public/kampuscms-logo.png" alt="KampusCMS Logo" width="200" />
+  <img src="public/kampuscms-logo-new.png" alt="Logo KampusCMS" width="200" />
   <h1>KampusCMS</h1>
 </div>
 
-**KampusCMS** is a modern, comprehensive, and **Multi-Tenant** Content Management System designed specifically for Indonesian universities and academic institutions. Built with the latest web technologies, it offers a seamless experience for managing academic portals, multiple landing pages, news, events, and alumni data from a single installation.
+**KampusCMS** adalah Content Management System (CMS) modern yang komprehensif dan mendukung **Multi-Tenant**, dirancang khusus untuk kebutuhan Perguruan Tinggi di Indonesia. Dibangun dengan teknologi web terkini, sistem ini memberikan pengalaman tanpa hambatan dalam mengelola portal akademik, website fakultas (multi-site), berita, agenda kegiatan, hingga data alumni dalam satu instalasi terpusat.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue) ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)
 
-## ✨ Key Features
+## ✨ Fitur Utama
 
-### 🌐 Multi-Site & Multi-Tenancy (New!)
--   **Single Instance, Multiple Sites**: Host the main university portal, landing pages for specific events (e.g., `pmb.univ.ac.id`), or faculty sites using subdomains or custom domains.
--   **Granular Settings**: Customize logos, colors, headers, and footers per site.
--   **Domain Management**: Built-in logic to handle `localhost`, subdomains, and custom domain mapping.
+### 🌐 Arsitektur Multi-Site & Multi-Tenant
+-   **Satu Sistem, Banyak Website**: Kelola website utama universitas, landing page PMB (Penerimaan Mahasiswa Baru), atau website Fakultas/Prodi hanya dengan satu instalasi.
+-   **Subdomain & Kustom Domain**: Dukungan penuh untuk subdomain (misal: `pmb.univ.ac.id`, `ft.univ.ac.id`) atau domain kustom terpisah.
+-   **Pengaturan Granular**: Tiap situs memiliki pengaturan logo, warna tema, header, dan footer yang terpisah.
 
-### 🏗️ Advanced Page Builder
--   **Drag-and-Drop Interface**: Intuitively build responsive pages without coding.
--   **Rich Block Library**:
-    -   **Layout**: Hero Sections, Multi-column text, Feature Lists, Separators.
-    -   **Content**: Text (Rich Text), Images, Videos, Carousels, Galleries.
-    -   **Dynamic**: News Grids, Staff Linktrees, Event Calendars, Download Centers.
-    -   **Integrations**: RSS Feeds (Google News), Social Media Embeds (Instagram, TikTok, YouTube).
-    -   **Academic**: Tracer Study Stats, Program Studi Lists.
--   **Live Preview**: Real-time visual editing with typography control.
+### 🏗️ Page Builder Canggih (No-Code)
+-   **Drag-and-Drop Interface**: Bangun halaman responsif dengan mudah tanpa perlu coding.
+-   **Pustaka Blok Lengkap**:
+    -   **Layout**: Hero Section, Kolom Teks, Fitur, Pemisah (Separator).
+    -   **Konten**: Editor Teks Kaya (Rich Text), Gambar, Video, Carousel, Galeri Foto.
+    -   **Dinamis**: Grid Berita, Daftar Staff/Dosen, Kalender Agenda, Pusat Unduhan.
+    -   **Integrasi**: RSS Feed (Berita Google), Embed Media Sosial (Instagram, TikTok, YouTube).
+    -   **Akademik**: Statistik Tracer Study, Daftar Program Studi.
+-   **Live Preview**: Edit tampilan secara real-time dengan kontrol tipografi yang presisi.
 
-### 🏛️ Academic Modules
--   **Tracer Study**: Complete module for tracking and managing alumni career paths with analytics.
--   **Program Studi**: Detailed management for study programs including code, names, and descriptions.
--   **Staff & Lecturers**: Directory management with integration capability for academic profiles.
--   **Download Center**: Centralized document distribution organized by categories.
--   **Gallery**: Photo album management with multi-image upload support.
+### 🏛️ Modul Akademik Terintegrasi
+-   **Tracer Study**: Modul lengkap untuk melacak karir alumni dengan visualisasi statistik.
+-   **Program Studi**: Manajemen data Program Studi, Kurikulum, dan Profil Lulusan.
+-   **Staff & Dosen**: Direktori profil dosen dan tenaga kependidikan yang terintegrasi.
+-   **Pusat Unduhan (Download Center)**: Distribusi dokumen akademik (SK, Panduan, Jurnal) yang terorganisir per kategori.
+-   **Galeri Kegiatan**: Manajemen album foto kegiatan kampus.
 
-### 🛠️ System Administration
--   **Role-Based Access Control**: Secure dashboard for Super Admins, Admins, Editors, and Lecturers.
--   **Media Manager**: Centralized file handling for images and documents.
--   **Backup & Restore**: Full system backup (Database + Files) and one-click restore functionality.
--   **Maintenance Tools**: Built-in scripts for database seeding, domain repairs, and integrity checks.
+### 🛠️ Administrasi Sistem
+-   **Manajemen Hak Akses (RBAC)**: Dashboard aman dengan level akses untuk Super Admin, Admin Unit, Editor, dan Dosen.
+-   **Manajer Media**: Pengelolaan file gambar dan dokumen terpusat.
+-   **Backup & Restore**: Fitur pencadangan data penuh (Database + File) dan pemulihan sistem satu-klik untuk keamanan data.
+-   **Pengaturan Situs**: Konfigurasi identitas kampus, SEO, dan kode pelacakan (Analytics) langsung dari dashboard.
 
-## 🛠️ Technology Stack
+## 🛠️ Teknologi yang Digunakan
 
 -   **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
--   **Language**: TypeScript
+-   **Bahasa**: TypeScript
 -   **Database**: PostgreSQL
 -   **ORM**: [Prisma](https://www.prisma.io/)
 -   **UI Components**: [Shadcn UI](https://ui.shadcn.com/) + Tailwind CSS v4
--   **Authentication**: NextAuth.js (v5)
+-   **Autentikasi**: NextAuth.js (v5)
 -   **Deployment**: Docker & Nginx
--   **Image Handling**: Sharp (Local optimization)
+-   **Optimasi Gambar**: Sharp
 
-## 🚀 Getting Started (Local Development)
+## 🚀 Panduan Instalasi (Lokal)
 
-1.  **Clone the repository**
+1.  **Clone Repository**
     ```bash
     git clone https://github.com/imamimam13/kampusCMS.git
     cd kampusCMS
@@ -61,80 +61,80 @@
     npm install
     ```
 
-3.  **Setup Environment**
-    Copy `.env.example` to `.env` and configure your database connection:
+3.  **Konfigurasi Environment**
+    Salin file `.env.example` menjadi `.env` dan sesuaikan koneksi database Anda:
     ```bash
     cp .env.example .env
     ```
 
-4.  **Initialize Database**
+4.  **Inisialisasi Database**
     ```bash
     npx prisma generate
     npx prisma db push
     ```
-    *Optionally seed the database:*
+    *Opsional: Isi data awal (seeding)*
     ```bash
     npx prisma db seed
     ```
 
-5.  **Run Development Server**
+5.  **Jalankan Server Development**
     ```bash
     npm run dev
     ```
-    Open [http://localhost:3000](http://localhost:3000) to view the app.
+    Buka [http://localhost:3000](http://localhost:3000) untuk mengakses aplikasi.
 
 ## 🐳 Deployment (Docker / Portainer / CasaOS)
 
-This project allows fully automated deployment using Docker.
+Proyek ini mendukung deployment otomatis menggunakan Docker.
 
-### Architecture
--   **kampuscms**: The main Next.js application (Port 3000 internal).
--   **db**: PostgreSQL database (isolated in internal network).
--   **nginx**: Custom Nginx reverse proxy (Exposed on Host Port **8097**).
--   **watchtower**: Automates container updates when new code is pushed.
+### Arsitektur Container
+-   **kampuscms**: Aplikasi utama Next.js (Port 3000 internal).
+-   **db**: Database PostgreSQL.
+-   **nginx**: Reverse proxy kustom (Port Host **8097**).
+-   **watchtower**: Otomatisasi update container saat ada perubahan kode di repository.
 
-### Deployment Steps
+### Langkah Deployment
 
-1.  **Pull the Stack**
-    Copy the `docker-compose.yml` file to your server (Portainer/CasaOS/Docker Swarm).
+1.  **Siapkan Stack**
+    Salin file `docker-compose.yml` ke server Anda (Portainer/CasaOS/Docker Swarm).
 
-2.  **Run the Stack**
+2.  **Jalankan Stack**
     ```bash
     docker-compose up -d
     ```
 
-3.  **Access the Site**
-    -   Public Web: `http://YOUR_SERVER_IP:8097`
-    -   Admin Panel: `http://YOUR_SERVER_IP:8097/admin`
+3.  **Akses Website**
+    -   Website Publik: `http://IP_SERVER_ANDA:8097`
+    -   Panel Admin: `http://IP_SERVER_ANDA:8097/admin`
 
-    > **Note:** Ensure your server allows traffic on port 8097, or modify `docker-compose.yml` to map to port 80.
+    > **Catatan:** Pastikan port 8097 terbuka di firewall server Anda.
 
 ### CI/CD Pipeline
-This repository creates two Docker images automatically via GitHub Actions:
--   `imamwb/kampuscms:latest` (Application)
--   `imamwb/kampuscms-nginx:latest` (Nginx Configured)
+Repository ini secara otomatis membuat docker image melalui GitHub Actions:
+-   `imamwb/kampuscms:latest` (Aplikasi)
+-   `imamwb/kampuscms-nginx:latest` (Konfigurasi Nginx)
 
-Pushing to `main` triggers a rebuild, and Watchtower on your server will automatically pull the new images and restart the services.
+Setiap push ke branch `main` akan memicu build ulang, dan Watchtower di server Anda akan otomatis menarik image terbaru.
 
-## 📂 Project Structure
+## 📂 Struktur Proyek
 
 ```
-├── prisma/               # Database schema & migrations
-├── public/               # Static assets
-├── scripts/              # Maintenance & Utility scripts
+├── prisma/               # Skema Database & Migrasi
+├── public/               # Aset Statis
+├── scripts/              # Skrip Pemeliharaan & Utilitas
 ├── src/
-│   ├── app/              # Next.js App Router pages
-│   ├── components/       # Reusable React components
-│   │   ├── admin/        # Admin dashboard components
-│   │   ├── builder/      # Page Builder engine
+│   ├── app/              # Halaman Next.js (App Router)
+│   ├── components/       # Komponen React Reusable
+│   │   ├── admin/        # Komponen Dashboard Admin
+│   │   ├── builder/      # Engine Page Builder
 │   │   └── ...
-│   ├── lib/              # Utility functions (prisma, auth, etc.)
-│   └── types/            # TypeScript definitions
-├── Dockerfile            # App Docker configuration
-├── Dockerfile.nginx      # Nginx Docker configuration
-└── docker-compose.yml    # Production deployment stack
+│   ├── lib/              # Fungsi Utilitas (Database, Auth)
+│   └── types/            # Definisi Tipe TypeScript
+├── Dockerfile            # Konfigurasi Docker Aplikasi
+├── Dockerfile.nginx      # Konfigurasi Docker Nginx
+└── docker-compose.yml    # Konfigurasi Deployment Produksi
 ```
 
-## 📝 License
+## 📝 Lisensi
 
 [MIT](LICENSE)
