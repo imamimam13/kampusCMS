@@ -15,6 +15,9 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    let tempZipPath = ''
+    let tempSqlPath = ''
+
     try {
         const formData = await req.formData()
         const file = formData.get('file') as File
@@ -23,10 +26,12 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "No file uploaded" }, { status: 400 })
         }
 
+        console.log("[RESTORE] Starting restore process...")
+
         // 1. Save uploaded zip temporarily
         const arrayBuffer = await file.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
-        const tempZipPath = path.join('/tmp', `restore-${Date.now()}.zip`)
+        tempZipPath = path.join('/tmp', `restore-${Date.now()}.zip`)
         await fs.writeFile(tempZipPath, buffer)
 
         // 2. Open Zip
@@ -47,109 +52,89 @@ export async function POST(req: Request) {
 
         // Extract SQL content
         const sqlContent = sqlEntry.getData()
+        if (sqlContent.length === 0) {
+            return NextResponse.json({ error: "Invalid backup: SQL dump is empty" }, { status: 400 })
+        }
 
-        // Execute psql to restore
-        // We write SQL to a temp file first to safely pass it to psql
-        const tempSqlPath = path.join('/tmp', `restore-${Date.now()}.sql`)
+        // Write SQL to temp file
+        tempSqlPath = path.join('/tmp', `restore-${Date.now()}.sql`)
         await fs.writeFile(tempSqlPath, sqlContent)
 
-        await new Promise<void>((resolve, reject) => {
-            // psql -d URL -f file.sql
-            const psql = spawn('psql', [dbUrl, '-f', tempSqlPath])
+        // 3.1 Terminate other connections to allow clean drop/restore
+        try {
+            console.log("[RESTORE] Terminating active database connections...")
+            await prisma.$executeRawUnsafe(`
+                SELECT pg_terminate_backend(pg_stat_activity.pid)
+                FROM pg_stat_activity
+                WHERE pg_stat_activity.datname = current_database()
+                AND pid <> pg_backend_pid();
+            `)
+        } catch (e) {
+            console.warn("[RESTORE] Failed to terminate connections (non-fatal):", e)
+        }
+
+        // 3.2 Execute psql to restore
+        console.log("[RESTORE] Executing psql...")
+        const restoreOutput = await new Promise<{ stdout: string, stderr: string }>((resolve, reject) => {
+            const psql = spawn('psql', [dbUrl, '-f', tempSqlPath], {
+                env: { ...process.env, ON_ERROR_STOP: '1' }
+            })
+
+            let stdout = ''
+            let stderr = ''
+
+            psql.stdout.on('data', (d) => stdout += d.toString())
+            psql.stderr.on('data', (d) => stderr += d.toString())
 
             psql.on('exit', (code) => {
-                if (code === 0) resolve()
-                else reject(new Error(`psql exited with code ${code}`))
+                if (code === 0) resolve({ stdout, stderr })
+                else reject(new Error(`psql exited with code ${code}\nStderr: ${stderr}`))
             })
 
-            psql.stderr.on('data', (data) => console.error(`psql error: ${data}`))
+            psql.on('error', (err) => {
+                reject(new Error(`Failed to spawn psql: ${err.message}`))
+            })
         })
 
-        // 3.5. Legacy Support: Ensure Schema Compatibility & Migrate Orphans
-        // If the backup was from an older version, it might overwrite tables and remove 'siteId'
-        // We run 'prisma db push' to ensure the schema is current (re-adding siteId if lost)
-        try {
-            console.log("Ensuring schema compatibility...")
-            await new Promise<void>((resolve, reject) => {
-                const push = spawn('npx', ['prisma', 'db', 'push', '--accept-data-loss', '--skip-generate'], {
-                    cwd: process.cwd() // Ensure we are in the project root
-                })
-                push.on('exit', (code) => {
-                    if (code === 0) resolve()
-                    else reject(new Error(`prisma db push exited with code ${code}`))
-                })
-                push.stdout.on('data', (d) => console.log(`prisma: ${d}`))
-                push.stderr.on('data', (d) => console.error(`prisma error: ${d}`))
-            })
+        console.log("[RESTORE] Database restored.")
 
-            // Fix Orphans: Assign NULL siteId to 'main'
-            // We assume 'main' subdomain exists. If not, we might need to create it or pick one.
-            // For now, let's look for a site with subdomain 'main' or fallback to the first site found.
-            // Note: We need a fresh prisma client or raw query because the schema might have just changed?
-            // Existing prisma client might be okay if we didn't change the TS definitions.
-
-            // Using prisma.$executeRawUnsafe to migrate table by table
-            const tablesWithSiteId = [
-                'Page', 'Post', 'Event', 'Download', 'GalleryAlbum', 'Testimonial', 'Alert', 'ProgramStudi', 'Staff'
-            ]
-
-            // Find Main Site ID
-            const mainSite = await prisma.site.findUnique({ where: { subdomain: 'main' } })
-
-            if (mainSite) {
-                console.log(`Migrating orphaned content to site: ${mainSite.name} (${mainSite.id})`)
-                for (const table of tablesWithSiteId) {
-                    try {
-                        const count = await prisma.$executeRawUnsafe(`UPDATE "${table}" SET "siteId" = '${mainSite.id}' WHERE "siteId" IS NULL;`)
-                        console.log(`Migrated ${count} ${table}s`)
-                    } catch (e) {
-                        console.warn(`Failed to migrate table ${table}:`, e)
-                    }
-                }
-
-                // Also update Users if needed? Users usually global, but if they had siteId...
-                // Only if User model has siteId, which it does now.
-                // await prisma.$executeRawUnsafe(`UPDATE "User" SET "siteId" = '${mainSite.id}' WHERE "siteId" IS NULL;`)
-            } else {
-                console.warn("Main site not found. Skipping orphan migration.")
-            }
-
-        } catch (e) {
-            console.error("Legacy migration failed:", e)
-            // We don't fail the whole request, just log it, as data restore might have been successful enough
-        }
+        /* 
+        // 3.5. Legacy Support: Disabled for now as it may cause conflicts with clean restores
+        // The restore process using pg_dump should already handle the schema correctly.
+        */
 
         // 4. Restore Uploads
         const uploadsDir = path.join(process.cwd(), 'public/uploads')
-
-        // Find 'uploads/' folder in zip
         const uploadEntries = zipEntries.filter(entry => entry.entryName.startsWith('uploads/'))
 
         if (uploadEntries.length > 0) {
-            // Check if directory exists
+            console.log(`[RESTORE] Restoring ${uploadEntries.length} upload files...`)
             try {
-                await fs.access(uploadsDir)
-                // Clean existing uploads?? Or merge? 
-                // Usually restore implies replacing state. Let's merge/overwrite but not delete existing unless requested.
-                // For a true "restore state" we should probably clean it, but let's be safe and just overwrite/add.
-            } catch (e) {
                 await fs.mkdir(uploadsDir, { recursive: true })
-            }
+            } catch (e) { }
 
-            // Extract all upload entries to public/uploads
-            // adm-zip extracts preserving paths, so user/uploads/file.png -> target/uploads/file.png
-            // We want target to be process.cwd()/public
             zip.extractEntryTo("uploads/", path.join(process.cwd(), 'public'), false, true)
         }
 
         // 5. Cleanup
-        await fs.unlink(tempZipPath)
-        await fs.unlink(tempSqlPath)
+        try {
+            await fs.unlink(tempZipPath)
+            await fs.unlink(tempSqlPath)
+        } catch (e) { /* ignore cleanup errors */ }
 
         return NextResponse.json({ success: true, message: "System restored successfully" })
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Restore failed:", error)
-        return NextResponse.json({ error: "Restore process failed" }, { status: 500 })
+        // Attempt cleanup
+        try {
+            if (tempZipPath) await fs.unlink(tempZipPath).catch(() => { })
+            if (tempSqlPath) await fs.unlink(tempSqlPath).catch(() => { })
+        } catch (e) { }
+
+        return NextResponse.json({
+            error: "Restore process failed",
+            details: error.message || String(error)
+        }, { status: 500 })
     }
 }
