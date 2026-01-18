@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/kampuscms-logo-new.png" alt="Logo KampusCMS" width="200" />
+  <img src="public/kampuscms-logo.png" alt="Logo KampusCMS" width="200" />
   <h1>KampusCMS</h1>
 </div>
 
