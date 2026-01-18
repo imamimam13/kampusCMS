@@ -11,6 +11,7 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json()
+        console.log("[PAGE_POST] Received save request", { id: body.id, slug: body.slug })
         const { id, slug, title, content, published } = body
 
         // Get current site

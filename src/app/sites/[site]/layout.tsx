@@ -40,7 +40,9 @@ export default async function SiteLayout({
     return (
         <>
             {siteData?.headCode && (
-                <div dangerouslySetInnerHTML={{ __html: siteData.headCode }} />
+                <div dangerouslySetInnerHTML={{
+                    __html: siteData.headCode.replace(/\\n/g, '\n') // Unescape literal \n if present
+                }} />
             )}
             <style>{`
                 :root {
@@ -53,7 +55,9 @@ export default async function SiteLayout({
             </PublicLayoutWrapper>
 
             {siteData?.bodyCode && (
-                <div dangerouslySetInnerHTML={{ __html: siteData.bodyCode }} />
+                <div dangerouslySetInnerHTML={{
+                    __html: siteData.bodyCode.replace(/\\n/g, '\n') // Unescape literal \n
+                }} />
             )}
         </>
     )

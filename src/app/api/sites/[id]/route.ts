@@ -34,7 +34,8 @@ export async function PUT(
     const { id } = await params
     try {
         const body = await req.json()
-        const { name, description, subdomain, customDomain, enabledBlocks, theme, enabledSidebarItems } = body
+        console.log("[SITE_PATCH] Updating site", { id, bodyKeys: Object.keys(body) })
+        const { name, description, colors, logo, footerText, footerConfig, headerLinks, headCode, bodyCode, subdomain, customDomain, enabledBlocks, theme, enabledSidebarItems } = body
 
         // Prepare update data dynamically to handle partial updates
         const data: any = {}
