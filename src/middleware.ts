@@ -23,6 +23,17 @@ export default function middleware(req: NextRequest) {
         return new NextResponse("Forbidden: Automated access denied.", { status: 403 })
     }
 
+    // Block common bot paths
+    const blockedPaths = [
+        "/wp-login.php",
+        "/xmlrpc.php",
+        "/.env",
+        "/etc/passwd"
+    ]
+    if (blockedPaths.some(path => url.pathname.includes(path))) {
+        return new NextResponse("Forbidden", { status: 403 })
+    }
+
     // Skip:
     if (
         url.pathname.startsWith("/api") ||
