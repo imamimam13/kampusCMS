@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { Calendar, User, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 export const dynamic = 'force-dynamic'
 
@@ -47,7 +48,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
 
             <div
                 className="prose prose-lg max-w-none dark:prose-invert"
-                dangerouslySetInnerHTML={{ __html: post.content || '' }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
             />
         </article>
     )

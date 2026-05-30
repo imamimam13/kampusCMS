@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, GraduationCap, User } from "lucide-react"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 export async function generateMetadata({ params }: { params: Promise<{ code: string }> }) {
     const { code } = await params
@@ -88,7 +89,7 @@ export default async function ProdiDetailPage({ params }: { params: Promise<{ co
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: prodi.vision }} />
+                                    <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(prodi.vision) }} />
                                 </CardContent>
                             </Card>
                         )}
@@ -102,7 +103,7 @@ export default async function ProdiDetailPage({ params }: { params: Promise<{ co
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: prodi.mission }} />
+                                    <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(prodi.mission) }} />
                                 </CardContent>
                             </Card>
                         )}

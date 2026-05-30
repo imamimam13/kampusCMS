@@ -1,4 +1,5 @@
 import { BlockData } from "@/types/builder"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 export function ColumnsBlock({ data }: { data: BlockData }) {
     const { count, columns } = data.content
@@ -10,7 +11,7 @@ export function ColumnsBlock({ data }: { data: BlockData }) {
                 <div className={`grid grid-cols-1 ${gridCols} gap-8`}>
                     {Array.from({ length: count }).map((_, i) => (
                         <div key={i} className="prose max-w-none">
-                            <div dangerouslySetInnerHTML={{ __html: columns?.[i]?.html || '' }} />
+                            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(columns?.[i]?.html) }} />
                         </div>
                     ))}
                 </div>

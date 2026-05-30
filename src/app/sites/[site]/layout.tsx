@@ -3,6 +3,7 @@ import { getSiteData } from "@/lib/sites"
 import { PublicLayoutWrapper } from "@/components/layout/public-layout-wrapper"
 import { notFound } from "next/navigation"
 import { Metadata } from "next"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 export async function generateMetadata({ params }: { params: { site: string } }): Promise<Metadata> {
     const { site: domain } = await params
@@ -41,7 +42,7 @@ export default async function SiteLayout({
         <>
             {siteData?.headCode && (
                 <div dangerouslySetInnerHTML={{
-                    __html: siteData.headCode.replace(/\\n/g, '\n') // Unescape literal \n if present
+                    __html: sanitizeHtml(siteData.headCode)
                 }} />
             )}
             <style>{`
@@ -56,7 +57,7 @@ export default async function SiteLayout({
 
             {siteData?.bodyCode && (
                 <div dangerouslySetInnerHTML={{
-                    __html: siteData.bodyCode.replace(/\\n/g, '\n') // Unescape literal \n
+                    __html: sanitizeHtml(siteData.bodyCode)
                 }} />
             )}
         </>

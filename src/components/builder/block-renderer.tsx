@@ -18,6 +18,7 @@ import { ProdiGridBlock } from "./blocks/prodi-grid-block"
 import { TracerStatsBlock } from "./blocks/tracer-stats-block"
 import { RSSBlock } from "./blocks/rss-block"
 import { SocialBlock } from "./blocks/social-block"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 export function BlockRenderer({ block }: { block: BlockData }) {
     // Extract styles if they exist
@@ -65,7 +66,7 @@ export function BlockRenderer({ block }: { block: BlockData }) {
                 return (
                     <section className="bg-white">
                         <div className="container mx-auto px-4 py-8">
-                            <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: block.content.html }} />
+                            <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: sanitizeHtml(block.content.html) }} />
                         </div>
                     </section>
                 )

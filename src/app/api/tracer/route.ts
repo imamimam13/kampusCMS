@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { auth } from "@/auth"
 
 export async function POST(req: Request) {
     try {
@@ -48,6 +49,9 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
+    const session = await auth()
+    if (!session) return new NextResponse("Unauthorized", { status: 401 })
+
     try {
         // Only for admin or verifying
         const responses = await prisma.tracerResponse.findMany({
@@ -61,6 +65,9 @@ export async function GET(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+    const session = await auth()
+    if (!session) return new NextResponse("Unauthorized", { status: 401 })
+
     try {
         const { searchParams } = new URL(req.url)
         const id = searchParams.get("id")

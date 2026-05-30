@@ -2,6 +2,7 @@ import { BlockData } from "@/types/builder"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 export function AboutBlock({ data }: { data: BlockData }) {
     const { title, description, image, stats, ctaText, ctaLink } = data.content
@@ -28,7 +29,7 @@ export function AboutBlock({ data }: { data: BlockData }) {
                             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">{title}</h2>
                             <div
                                 className="prose prose-gray dark:prose-invert max-w-none text-muted-foreground"
-                                dangerouslySetInnerHTML={{ __html: description }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }}
                             />
                         </div>
 

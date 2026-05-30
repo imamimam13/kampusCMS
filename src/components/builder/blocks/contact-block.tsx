@@ -1,5 +1,6 @@
 import { BlockData } from "@/types/builder"
 import { Mail, MapPin, Phone } from "lucide-react"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 export function ContactBlock({ data }: { data: BlockData }) {
     const { title, address, phone, email, mapUrl } = data.content
@@ -16,7 +17,7 @@ export function ContactBlock({ data }: { data: BlockData }) {
                             {address && (
                                 <div className="flex items-start gap-3">
                                     <MapPin className="w-5 h-5 text-purple-600 mt-1 shrink-0" />
-                                    <div className="prose prose-sm" dangerouslySetInnerHTML={{ __html: address }} />
+                                    <div className="prose prose-sm" dangerouslySetInnerHTML={{ __html: sanitizeHtml(address) }} />
                                 </div>
                             )}
 

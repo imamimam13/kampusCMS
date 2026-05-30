@@ -3,6 +3,7 @@
 import { BlockData } from "@/types/builder"
 import { useEffect, useRef } from "react"
 import { Instagram, Music, Youtube, Hash, Code } from "lucide-react"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 export function SocialBlock({ data }: { data: BlockData }) {
     // Config
@@ -99,7 +100,7 @@ export function SocialBlock({ data }: { data: BlockData }) {
                 <div ref={containerRef} className="flex justify-center">
                     {mode === 'url' ? renderNativeEmbed() : (
                         embedCode ? (
-                            <div dangerouslySetInnerHTML={{ __html: embedCode }} />
+                            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(embedCode) }} />
                         ) : (
                             <div className="w-full p-8 text-center bg-slate-50 border rounded text-slate-500">
                                 Paste your widget code in the settings
