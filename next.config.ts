@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' https://www.instagram.com https://www.tiktok.com https://www.youtube.com https://instagram.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; frame-src 'self' https://www.youtube.com https://www.instagram.com https://www.tiktok.com https://www.google.com; connect-src 'self' https:;"
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.instagram.com https://www.tiktok.com https://www.youtube.com https://instagram.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; frame-src 'self' https://www.youtube.com https://www.instagram.com https://www.tiktok.com https://www.google.com; connect-src 'self' https:;"
           },
           {
             key: 'X-Content-Type-Options',
