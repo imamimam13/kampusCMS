@@ -38,13 +38,24 @@ export function AlbumForm({ initialData }: AlbumFormProps) {
                 body: formData
             })
 
-            if (!res.ok) throw new Error("Upload failed")
+            if (!res.ok) {
+                let errMsg = "Upload failed"
+                try {
+                    const errData = await res.json()
+                    if (errData && errData.error) {
+                        errMsg = errData.error
+                    }
+                } catch (_) {
+                    // Ignore JSON parsing errors
+                }
+                throw new Error(errMsg)
+            }
 
             const data = await res.json()
             setCoverImage(data.url)
-        } catch (error) {
+        } catch (error: any) {
             console.error(error)
-            alert("Upload failed")
+            alert(error.message || "Upload failed")
         } finally {
             setUploading(false)
             if (fileInputRef.current) fileInputRef.current.value = ''

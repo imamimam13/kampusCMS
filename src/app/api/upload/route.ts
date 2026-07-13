@@ -2,7 +2,17 @@ import { writeFile, mkdir } from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import { auth } from '@/auth'
-import sharp from 'sharp'
+
+// Lazy load sharp to prevent runtime crashes on environments lacking the correct native binary (e.g. Docker Alpine)
+async function getSharp() {
+    try {
+        const sharpModule = await import('sharp')
+        return sharpModule.default || sharpModule
+    } catch (error) {
+        console.error("[UPLOAD] Failed to dynamically import 'sharp':", error)
+        return null
+    }
+}
 
 export async function POST(request: NextRequest) {
     const session = await auth()
@@ -23,16 +33,23 @@ export async function POST(request: NextRequest) {
     // If it's an image and larger than 500KB, compress it
     const isImage = file.type.startsWith('image/')
     const isLarge = file.size > 500 * 1024 // 500KB
+    let wasCompressed = false
 
     if (isImage && isLarge) {
         try {
-            buffer = await sharp(buffer)
-                .resize(1920, 1080, { // Max dimensions (HD)
-                    fit: 'inside',
-                    withoutEnlargement: true
-                })
-                .jpeg({ quality: 80, mozjpeg: true }) // Convert to JPEG with good compression
-                .toBuffer()
+            const sharpInstance = await getSharp()
+            if (sharpInstance) {
+                buffer = await sharpInstance(buffer)
+                    .resize(1920, 1080, { // Max dimensions (HD)
+                        fit: 'inside',
+                        withoutEnlargement: true
+                    })
+                    .jpeg({ quality: 80, mozjpeg: true }) // Convert to JPEG with good compression
+                    .toBuffer()
+                wasCompressed = true
+            } else {
+                console.warn("[UPLOAD] sharp is not available. Saving original file without compression.")
+            }
         } catch (error) {
             console.error("Compression failed, saving original.", error)
             // Fallback to original buffer
@@ -41,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     // Sanitize filename (ensure .jpg if compressed, otherwise keep original extension)
     let filename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-    if (isImage && isLarge) {
+    if (wasCompressed) {
         // If we compressed, we likely converted to JPEG, so update extension
         filename = filename.replace(/\.[^/.]+$/, "") + ".jpg"
     }
@@ -72,9 +89,14 @@ export async function POST(request: NextRequest) {
 
         try {
             // Try to get dimensions if it's an image
-            const metadata = await sharp(buffer).metadata()
-            width = metadata.width || 0
-            height = metadata.height || 0
+            if (isImage) {
+                const sharpInstance = await getSharp()
+                if (sharpInstance) {
+                    const metadata = await sharpInstance(buffer).metadata()
+                    width = metadata.width || 0
+                    height = metadata.height || 0
+                }
+            }
         } catch (e) {
             console.warn("[UPLOAD] Metadata extraction failed (non-fatal):", e)
         }

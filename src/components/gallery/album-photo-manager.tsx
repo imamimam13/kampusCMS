@@ -17,6 +17,7 @@ export function AlbumPhotoManager({ albumId, images }: { albumId: string, images
         setUploading(true)
         const files = Array.from(e.target.files)
 
+        const failedFiles: string[] = []
         try {
             // Upload files sequentially for simplicity
             for (const file of files) {
@@ -29,7 +30,17 @@ export function AlbumPhotoManager({ albumId, images }: { albumId: string, images
                     body: formData
                 })
 
-                if (!uploadRes.ok) continue
+                if (!uploadRes.ok) {
+                    let errMsg = "Upload failed"
+                    try {
+                        const errData = await uploadRes.json()
+                        if (errData && errData.error) {
+                            errMsg = errData.error
+                        }
+                    } catch (_) {}
+                    failedFiles.push(`${file.name}: ${errMsg}`)
+                    continue
+                }
                 const { url, size, width, height } = await uploadRes.json()
 
                 // 2. Add to Album in DB
@@ -45,6 +56,9 @@ export function AlbumPhotoManager({ albumId, images }: { albumId: string, images
                         height
                     })
                 })
+            }
+            if (failedFiles.length > 0) {
+                alert(`Some photos failed to upload:\n${failedFiles.join('\n')}`)
             }
             router.refresh()
         } catch (error) {
