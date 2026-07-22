@@ -5,7 +5,7 @@ import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { sanitizeHtml } from "@/lib/sanitize"
 
-export async function generateMetadata({ params }: { params: { site: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ site: string }> }): Promise<Metadata> {
     const { site: domain } = await params
     const siteData = await getSiteData(domain)
 
@@ -26,7 +26,7 @@ export default async function SiteLayout({
     params,
     children,
 }: {
-    params: { site: string }
+    params: Promise<{ site: string }>
     children: React.ReactNode
 }) {
     const { site: domain } = await params

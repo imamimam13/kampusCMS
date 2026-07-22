@@ -7,7 +7,7 @@ import { getSiteData } from "@/lib/sites"
 
 export const dynamic = 'force-dynamic'
 
-export default async function PublicPage({ params }: { params: { site: string, slug?: string[] } }) {
+export default async function PublicPage({ params }: { params: Promise<{ site: string, slug?: string[] }> }) {
     const { site: domain, slug } = await params
 
     // 1. Get Site

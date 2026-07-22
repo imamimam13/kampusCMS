@@ -65,7 +65,7 @@ export function SocialBlock({ data }: { data: BlockData }) {
                 // Note: Instagram usually requires their script.js, but a simple way is link or using standard embed endpoints if available
                 return (
                     <div className="flex justify-center">
-                        <blockquote className="instagram-media" data-instgrm-permalink={url} data-instgrm-version="14" style={{ background: '#FFF', border: 0, borderRadius: '3px', boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)', margin: '1px', maxWidth: '540px', minWidth: '326px', padding: 0, width: '99.375%', width: '-webkit-calc(100% - 2px)', width: 'calc(100% - 2px)' }}>
+                        <blockquote className="instagram-media" data-instgrm-permalink={url} data-instgrm-version="14" style={{ background: '#FFF', border: 0, borderRadius: '3px', boxShadow: '0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)', margin: '1px', maxWidth: '540px', minWidth: '326px', padding: 0, width: 'calc(100% - 2px)' }}>
                         </blockquote>
                         {/* We need the script globally or injected here. For now, we rely on the component mount injection or advise user to paste code */}
                         <script async src="//www.instagram.com/embed.js"></script>

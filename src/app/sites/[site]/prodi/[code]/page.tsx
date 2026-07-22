@@ -10,7 +10,7 @@ import { sanitizeHtml } from "@/lib/sanitize"
 
 export async function generateMetadata({ params }: { params: Promise<{ code: string }> }) {
     const { code } = await params
-    const prodi = await prisma.programStudi.findUnique({ where: { code } })
+    const prodi = await prisma.programStudi.findFirst({ where: { code } })
     if (!prodi) return { title: "Program Not Found" }
     return {
         title: `${prodi.name} (${prodi.degree})`,
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ code: str
 
 export default async function ProdiDetailPage({ params }: { params: Promise<{ code: string }> }) {
     const { code } = await params
-    const prodi = await prisma.programStudi.findUnique({
+    const prodi = await prisma.programStudi.findFirst({
         where: { code },
         include: {
             headOfProdi: true

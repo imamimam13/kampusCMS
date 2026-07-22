@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 export default async function EventDetailPage({ params }: { params: { slug: string } }) {
     const { slug } = await params
 
-    const event = await prisma.event.findUnique({
+    const event = await prisma.event.findFirst({
         where: { slug }
     })
 

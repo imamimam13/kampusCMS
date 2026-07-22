@@ -25,7 +25,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         // Optional: Update slug if title changes (usually discouraged, but possible)
         // For now, let's keep slug stable to avoid breaking links
 
-        const post = await prisma.post.update({
+        const updatedPost = await prisma.post.update({
             where: { id },
             data: {
                 title,
@@ -35,7 +35,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
             }
         })
 
-        return NextResponse.json(post)
+        return NextResponse.json(updatedPost)
     } catch (error) {
         console.error("PUT Error:", error)
         return new NextResponse("Internal Error", { status: 500 })

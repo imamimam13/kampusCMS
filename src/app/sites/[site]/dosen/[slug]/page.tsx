@@ -32,7 +32,7 @@ const ICON_MAP: Record<string, any> = {
 export default async function PublicStaffPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params
 
-    const staff = await prisma.staff.findUnique({
+    const staff = await prisma.staff.findFirst({
         where: { slug }
     })
 

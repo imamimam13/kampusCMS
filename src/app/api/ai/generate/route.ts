@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 export async function POST(req: Request) {
     try {
         const { prompt } = await req.json()
-        const settings = await prisma.siteSettings.findFirst()
+        const settings = await prisma.site.findFirst()
         const config = (settings?.aiConfig as any) || {}
 
         if (!config.provider) {

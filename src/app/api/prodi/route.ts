@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         const { code, name, degree, accreditation, vision, mission, headOfProdiId, curriculum } = body
 
         // Check Unique Code
-        const existing = await prisma.programStudi.findUnique({ where: { code } })
+        const existing = await prisma.programStudi.findFirst({ where: { code } })
         if (existing) return new NextResponse("Code already exists", { status: 400 })
 
         const prodi = await prisma.programStudi.create({
