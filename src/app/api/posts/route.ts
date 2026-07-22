@@ -51,6 +51,15 @@ export async function POST(req: Request) {
             if (site) targetSiteId = site.id
         }
 
+        if (!targetSiteId) {
+            return new NextResponse("Site ID required or site not found", { status: 400 })
+        }
+
+        // Authorization check: User must be super_admin or user's siteId must match targetSiteId
+        if ((session.user as any).role !== 'super_admin' && (session.user as any).siteId !== targetSiteId) {
+            return new NextResponse("Forbidden: Access denied to this site's resources", { status: 403 })
+        }
+
         let slug = slugify(title)
 
         // Ensure unique slug scope to site if possible, but schema has @unique([siteId, slug])

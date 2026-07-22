@@ -22,6 +22,11 @@ export async function POST(req: Request) {
 
         const siteId = site.id
 
+        // Authorization check: User must be super_admin or user's siteId must match target siteId
+        if ((session.user as any).role !== 'super_admin' && (session.user as any).siteId !== siteId) {
+            return new NextResponse("Forbidden: Access denied to this site's resources", { status: 403 })
+        }
+
         // If ID is provided, update existing
         if (id) {
             // Verify ownership
@@ -72,6 +77,17 @@ export async function DELETE(req: Request) {
         const id = searchParams.get('id')
 
         if (!id) return new NextResponse("ID required", { status: 400 })
+
+        // Retrieve target page to verify siteId
+        const page = await prisma.page.findUnique({
+            where: { id }
+        })
+        if (!page) return new NextResponse("Page not found", { status: 404 })
+
+        // Authorization check: User must be super_admin or user's siteId must match page's siteId
+        if ((session.user as any).role !== 'super_admin' && (session.user as any).siteId !== page.siteId) {
+            return new NextResponse("Forbidden: Access denied to this resource", { status: 403 })
+        }
 
         await prisma.page.delete({ where: { id } })
         return new NextResponse("Deleted", { status: 200 })

@@ -1,10 +1,16 @@
 
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { auth } from "@/auth"
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
+    const session = await auth()
+    if (!session || (session.user as any).role !== 'super_admin') {
+        return new NextResponse("Unauthorized", { status: 401 })
+    }
+
     try {
         // 1. Find the first user (usually the one created during broken setup)
         const user = await prisma.user.findFirst({

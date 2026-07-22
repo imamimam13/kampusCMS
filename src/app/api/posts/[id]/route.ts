@@ -9,6 +9,16 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
     try {
         const { id } = await params
+        const post = await prisma.post.findUnique({
+            where: { id }
+        })
+        if (!post) return new NextResponse("Post not found", { status: 404 })
+
+        // Authorization check: User must be super_admin or user's siteId must match post's siteId
+        if ((session.user as any).role !== 'super_admin' && (session.user as any).siteId !== post.siteId) {
+            return new NextResponse("Forbidden: Access denied to this resource", { status: 403 })
+        }
+
         const body = await req.json()
         const { title, content, image, published } = body
 
@@ -38,6 +48,16 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
     try {
         const { id } = await params
+        const post = await prisma.post.findUnique({
+            where: { id }
+        })
+        if (!post) return new NextResponse("Post not found", { status: 404 })
+
+        // Authorization check: User must be super_admin or user's siteId must match post's siteId
+        if ((session.user as any).role !== 'super_admin' && (session.user as any).siteId !== post.siteId) {
+            return new NextResponse("Forbidden: Access denied to this resource", { status: 403 })
+        }
+
         await prisma.post.delete({ where: { id } })
         return NextResponse.json({ success: true })
     } catch (error) {
