@@ -27,6 +27,16 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "No file uploaded" }, { status: 400 })
     }
 
+    // Strict Security Validation: Whitelist safe file extensions & disallow executable/script files (SVG, HTML, PHP, JS, etc.)
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.zip', '.txt', '.csv'];
+    const fileExt = path.extname(file.name).toLowerCase();
+    const mimeType = (file.type || '').toLowerCase();
+
+    if (!allowedExtensions.includes(fileExt) || mimeType.includes('svg') || mimeType.includes('html') || mimeType.includes('javascript')) {
+        console.warn(`[UPLOAD_SECURITY_BLOCK] Blocked potentially unsafe file upload: name=${file.name}, ext=${fileExt}, type=${mimeType}`);
+        return NextResponse.json({ error: "File type not allowed for security reasons." }, { status: 400 });
+    }
+
     let buffer = Buffer.from(await file.arrayBuffer() as any)
 
     // Compression Logic

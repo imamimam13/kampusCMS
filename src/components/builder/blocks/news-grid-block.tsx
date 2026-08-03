@@ -5,6 +5,8 @@ import Link from "next/link"
 import { Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
 
+import { sanitizeHtml } from "@/lib/sanitize"
+
 export function NewsGridBlock({ data }: { data: BlockData }) {
     const { title } = data.content || {}
     const [news, setNews] = useState<any[]>([])
@@ -65,7 +67,7 @@ export function NewsGridBlock({ data }: { data: BlockData }) {
                                     <h3 className="font-semibold text-lg mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
                                         <Link href={`/posts/${item.slug}`}>{item.title}</Link>
                                     </h3>
-                                    <div className="text-slate-600 text-sm line-clamp-2 flex-1" dangerouslySetInnerHTML={{ __html: item.content }} />
+                                    <div className="text-slate-600 text-sm line-clamp-2 flex-1" dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }} />
                                 </div>
                             </div>
                         ))}
